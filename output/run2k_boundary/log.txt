@@ -1,0 +1,1297 @@
+[05/25 19:14:39] detectron2 INFO: Rank of current process: 0. World size: 1
+[05/25 19:14:39] detectron2 INFO: Environment info:
+-------------------------------  --------------------------------------------------------------------------------------------------------------
+sys.platform                     win32
+Python                           3.11.15 | packaged by Anaconda, Inc. | (main, Mar 11 2026, 17:12:15) [MSC v.1942 64 bit (AMD64)]
+numpy                            2.0.1
+detectron2                       0.6 @D:\Programs\miniconda3\envs\bcn_311\Lib\site-packages\detectron2
+Compiler                         MSVC 194435226
+CUDA compiler                    CUDA 12.9
+detectron2 arch flags            D:\Programs\miniconda3\envs\bcn_311\Lib\site-packages\detectron2\_C.cp311-win_amd64.pyd; cannot find cuobjdump
+DETECTRON2_ENV_MODULE            <not set>
+PyTorch                          2.6.0+cu124 @D:\Programs\miniconda3\envs\bcn_311\Lib\site-packages\torch
+PyTorch debug build              False
+torch._C._GLIBCXX_USE_CXX11_ABI  False
+GPU available                    Yes
+GPU 0                            NVIDIA GeForce GTX 1650 (arch=7.5)
+Driver version                   595.79
+CUDA_HOME                        C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9
+Pillow                           11.1.0
+torchvision                      0.21.0+cu124 @D:\Programs\miniconda3\envs\bcn_311\Lib\site-packages\torchvision
+torchvision arch flags           D:\Programs\miniconda3\envs\bcn_311\Lib\site-packages\torchvision\_C.pyd; cannot find cuobjdump
+fvcore                           0.1.5.post20221221
+iopath                           0.1.9
+cv2                              4.13.0
+-------------------------------  --------------------------------------------------------------------------------------------------------------
+PyTorch built with:
+  - C++ Version: 201703
+  - MSVC 192930157
+  - Intel(R) oneAPI Math Kernel Library Version 2025.0.1-Product Build 20241031 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.5.3 (Git Hash 66f0cb9eb66affd2da3bf5f8d897376f04aae6af)
+  - OpenMP 2019
+  - LAPACK is enabled (usually provided by MKL)
+  - CPU capability usage: AVX2
+  - CUDA Runtime 12.4
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 90.1
+  - Magma 2.5.4
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, COMMIT_SHA=2236df1770800ffea5697b11b0bb0d910b2e59e1, CUDA_VERSION=12.4, CUDNN_VERSION=9.1.0, CXX_COMPILER=C:/actions-runner/_work/pytorch/pytorch/pytorch/.ci/pytorch/windows/tmp_bin/sccache-cl.exe, CXX_FLAGS=/DWIN32 /D_WINDOWS /GR /EHsc /Zc:__cplusplus /bigobj /FS /utf-8 -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOCUPTI -DLIBKINETO_NOROCTRACER -DLIBKINETO_NOXPUPTI=ON -DUSE_FBGEMM -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE /wd4624 /wd4068 /wd4067 /wd4267 /wd4661 /wd4717 /wd4244 /wd4804 /wd4273, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.6.0, USE_CUDA=ON, USE_CUDNN=ON, USE_CUSPARSELT=OFF, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=OFF, USE_NNPACK=OFF, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, 
+
+[05/25 19:14:39] detectron2 INFO: Command line arguments: Namespace(config_file='', resume=False, eval_only=False, num_gpus=1, num_machines=1, machine_rank=0, dist_url='tcp://127.0.0.1:49153', opts=['SOLVER.MAX_ITER', '2000', 'SOLVER.STEPS', '(1500,1800)', 'SOLVER.WARMUP_ITERS', '100', 'SOLVER.CHECKPOINT_PERIOD', '1000', 'TEST.EVAL_PERIOD', '500', 'OUTPUT_DIR', './output/run2k_boundary'])
+[05/25 19:14:39] detectron2 INFO: Running with full config:
+BCNET:
+  DATA_ROOT: data/cocoa-cls
+  HEAD:
+    USE_BOUNDARY: true
+    USE_GCN: false
+  LOSS:
+    OCCLUDEE_BOUNDARY_WEIGHT: 0.5
+    OCCLUDEE_MASK_WEIGHT: 1.0
+    OCCLUDER_BOUNDARY_WEIGHT: 0.5
+    OCCLUDER_MASK_WEIGHT: 1.0
+  TRAIN_DATASET_NAME: cocoa_mini_train
+  TRAIN_IMG_DIR: data/cocoa-cls/val2014
+  TRAIN_JSON: data/cocoa-cls/annotations/cocoa_mini_test_with_occluder.json
+  VAL_DATASET_NAME: cocoa_mini_val
+  VAL_IMG_DIR: data/cocoa-cls/val2014
+  VAL_JSON: data/cocoa-cls/annotations/cocoa_mini_test_with_occluder.json
+  VISIBLE_EVAL_DATASET_NAME: cocoa_mini_visible_eval
+  VISIBLE_EVAL_IMG_DIR: data/cocoa-cls/val2014
+  VISIBLE_EVAL_JSON: data/cocoa-cls/annotations/cocoa_mini_visible_eval.json
+CUDNN_BENCHMARK: false
+DATALOADER:
+  ASPECT_RATIO_GROUPING: true
+  FILTER_EMPTY_ANNOTATIONS: true
+  NUM_WORKERS: 0
+  REPEAT_SQRT: true
+  REPEAT_THRESHOLD: 0.0
+  SAMPLER_TRAIN: TrainingSampler
+DATASETS:
+  PRECOMPUTED_PROPOSAL_TOPK_TEST: 1000
+  PRECOMPUTED_PROPOSAL_TOPK_TRAIN: 2000
+  PROPOSAL_FILES_TEST: []
+  PROPOSAL_FILES_TRAIN: []
+  TEST:
+  - cocoa_mini_visible_eval
+  TRAIN:
+  - cocoa_mini_train
+FLOAT32_PRECISION: ''
+GLOBAL:
+  HACK: 1.0
+INPUT:
+  CROP:
+    ENABLED: false
+    SIZE:
+    - 0.9
+    - 0.9
+    TYPE: relative_range
+  FORMAT: BGR
+  MASK_FORMAT: bitmask
+  MAX_SIZE_TEST: 800
+  MAX_SIZE_TRAIN: 800
+  MIN_SIZE_TEST: 500
+  MIN_SIZE_TRAIN:
+  - 400
+  - 500
+  - 600
+  MIN_SIZE_TRAIN_SAMPLING: choice
+  RANDOM_FLIP: horizontal
+MODEL:
+  ANCHOR_GENERATOR:
+    ANGLES:
+    - - -90
+      - 0
+      - 90
+    ASPECT_RATIOS:
+    - - 0.5
+      - 1.0
+      - 2.0
+    NAME: DefaultAnchorGenerator
+    OFFSET: 0.0
+    SIZES:
+    - - 32
+    - - 64
+    - - 128
+    - - 256
+    - - 512
+  BACKBONE:
+    FREEZE_AT: 5
+    NAME: build_resnet_fpn_backbone
+  DEVICE: cuda
+  FPN:
+    FUSE_TYPE: sum
+    IN_FEATURES:
+    - res2
+    - res3
+    - res4
+    - res5
+    NORM: ''
+    OUT_CHANNELS: 256
+  KEYPOINT_ON: false
+  LOAD_PROPOSALS: false
+  MASK_ON: true
+  META_ARCHITECTURE: GeneralizedRCNN
+  PANOPTIC_FPN:
+    COMBINE:
+      ENABLED: true
+      INSTANCES_CONFIDENCE_THRESH: 0.5
+      OVERLAP_THRESH: 0.5
+      STUFF_AREA_LIMIT: 4096
+    INSTANCE_LOSS_WEIGHT: 1.0
+  PIXEL_MEAN:
+  - 103.53
+  - 116.28
+  - 123.675
+  PIXEL_STD:
+  - 1.0
+  - 1.0
+  - 1.0
+  PROPOSAL_GENERATOR:
+    MIN_SIZE: 0
+    NAME: RPN
+  RESNETS:
+    DEFORM_MODULATED: false
+    DEFORM_NUM_GROUPS: 1
+    DEFORM_ON_PER_STAGE:
+    - false
+    - false
+    - false
+    - false
+    DEPTH: 50
+    NORM: FrozenBN
+    NUM_GROUPS: 1
+    OUT_FEATURES:
+    - res2
+    - res3
+    - res4
+    - res5
+    RES2_OUT_CHANNELS: 256
+    RES5_DILATION: 1
+    STEM_OUT_CHANNELS: 64
+    STRIDE_IN_1X1: true
+    WIDTH_PER_GROUP: 64
+  RETINANET:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_WEIGHTS: &id002
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    FOCAL_LOSS_ALPHA: 0.25
+    FOCAL_LOSS_GAMMA: 2.0
+    IN_FEATURES:
+    - p3
+    - p4
+    - p5
+    - p6
+    - p7
+    IOU_LABELS:
+    - 0
+    - -1
+    - 1
+    IOU_THRESHOLDS:
+    - 0.4
+    - 0.5
+    NMS_THRESH_TEST: 0.5
+    NORM: ''
+    NUM_CLASSES: 80
+    NUM_CONVS: 4
+    PRIOR_PROB: 0.01
+    SCORE_THRESH_TEST: 0.05
+    SMOOTH_L1_LOSS_BETA: 0.1
+    TOPK_CANDIDATES_TEST: 1000
+  ROI_BOX_CASCADE_HEAD:
+    BBOX_REG_WEIGHTS:
+    - &id001
+      - 10.0
+      - 10.0
+      - 5.0
+      - 5.0
+    - - 20.0
+      - 20.0
+      - 10.0
+      - 10.0
+    - - 30.0
+      - 30.0
+      - 15.0
+      - 15.0
+    IOUS:
+    - 0.5
+    - 0.6
+    - 0.7
+  ROI_BOX_HEAD:
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: *id001
+    CLS_AGNOSTIC_BBOX_REG: false
+    CONV_DIM: 256
+    FC_DIM: 1024
+    FED_LOSS_FREQ_WEIGHT_POWER: 0.5
+    FED_LOSS_NUM_CLASSES: 50
+    NAME: FastRCNNConvFCHead
+    NORM: ''
+    NUM_CONV: 0
+    NUM_FC: 2
+    POOLER_RESOLUTION: 7
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+    SMOOTH_L1_BETA: 0.0
+    TRAIN_ON_PRED_BOXES: false
+    USE_FED_LOSS: false
+    USE_SIGMOID_CE: false
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 64
+    IN_FEATURES:
+    - p2
+    - p3
+    - p4
+    - p5
+    IOU_LABELS:
+    - 0
+    - 1
+    IOU_THRESHOLDS:
+    - 0.5
+    NAME: StandardROIHeads
+    NMS_THRESH_TEST: 0.5
+    NUM_CLASSES: 80
+    POSITIVE_FRACTION: 0.25
+    PROPOSAL_APPEND_GT: true
+    SCORE_THRESH_TEST: 0.05
+  ROI_KEYPOINT_HEAD:
+    CONV_DIMS:
+    - 512
+    - 512
+    - 512
+    - 512
+    - 512
+    - 512
+    - 512
+    - 512
+    LOSS_WEIGHT: 1.0
+    MIN_KEYPOINTS_PER_IMAGE: 1
+    NAME: KRCNNConvDeconvUpsampleHead
+    NORMALIZE_LOSS_BY_VISIBLE_KEYPOINTS: true
+    NUM_KEYPOINTS: 17
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  ROI_MASK_HEAD:
+    CLS_AGNOSTIC_MASK: true
+    CONV_DIM: 256
+    NAME: BCNetBilayerMaskHead
+    NORM: ''
+    NUM_CONV: 4
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_TYPE: ROIAlignV2
+  RPN:
+    BATCH_SIZE_PER_IMAGE: 256
+    BBOX_REG_LOSS_TYPE: smooth_l1
+    BBOX_REG_LOSS_WEIGHT: 1.0
+    BBOX_REG_WEIGHTS: *id002
+    BOUNDARY_THRESH: -1
+    CONV_DIMS:
+    - -1
+    HEAD_NAME: StandardRPNHead
+    IN_FEATURES:
+    - p2
+    - p3
+    - p4
+    - p5
+    - p6
+    IOU_LABELS:
+    - 0
+    - -1
+    - 1
+    IOU_THRESHOLDS:
+    - 0.3
+    - 0.7
+    LOSS_WEIGHT: 1.0
+    NMS_THRESH: 0.7
+    POSITIVE_FRACTION: 0.5
+    POST_NMS_TOPK_TEST: 250
+    POST_NMS_TOPK_TRAIN: 500
+    PRE_NMS_TOPK_TEST: 500
+    PRE_NMS_TOPK_TRAIN: 1000
+    SMOOTH_L1_BETA: 0.0
+  SEM_SEG_HEAD:
+    COMMON_STRIDE: 4
+    CONVS_DIM: 128
+    IGNORE_VALUE: 255
+    IN_FEATURES:
+    - p2
+    - p3
+    - p4
+    - p5
+    LOSS_WEIGHT: 1.0
+    NAME: SemSegFPNHead
+    NORM: GN
+    NUM_CLASSES: 54
+  WEIGHTS: detectron2://ImageNetPretrained/MSRA/R-50.pkl
+OUTPUT_DIR: ./output/run2k_boundary
+SEED: -1
+SOLVER:
+  AMP:
+    ENABLED: true
+  BASE_LR: 0.0025
+  BASE_LR_END: 0.0
+  BIAS_LR_FACTOR: 1.0
+  CHECKPOINT_PERIOD: 1000
+  CLIP_GRADIENTS:
+    CLIP_TYPE: value
+    CLIP_VALUE: 1.0
+    ENABLED: false
+    NORM_TYPE: 2.0
+  GAMMA: 0.1
+  IMS_PER_BATCH: 1
+  LR_SCHEDULER_NAME: WarmupMultiStepLR
+  MAX_ITER: 2000
+  MOMENTUM: 0.9
+  NESTEROV: false
+  NUM_DECAYS: 3
+  REFERENCE_WORLD_SIZE: 0
+  RESCALE_INTERVAL: false
+  STEPS:
+  - 1500
+  - 1800
+  WARMUP_FACTOR: 0.001
+  WARMUP_ITERS: 100
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: null
+  WEIGHT_DECAY_NORM: 0.0
+TEST:
+  AUG:
+    ENABLED: false
+    FLIP: true
+    MAX_SIZE: 4000
+    MIN_SIZES:
+    - 400
+    - 500
+    - 600
+    - 700
+    - 800
+    - 900
+    - 1000
+    - 1100
+    - 1200
+  DETECTIONS_PER_IMAGE: 100
+  EVAL_PERIOD: 500
+  EXPECTED_RESULTS: []
+  KEYPOINT_OKS_SIGMAS: []
+  PRECISE_BN:
+    ENABLED: false
+    NUM_ITER: 200
+VERSION: 2
+VIS_PERIOD: 0
+
+[05/25 19:14:39] detectron2 INFO: Full config saved to ./output/run2k_boundary\config.yaml
+[05/25 19:14:40] d2.utils.env INFO: Using a generated random seed 40077643
+[05/25 19:14:41] d2.engine.defaults INFO: Model:
+GeneralizedRCNN(
+  (backbone): FPN(
+    (fpn_lateral2): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral3): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral4): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral5): Conv2d(2048, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output5): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (top_block): LastLevelMaxPool()
+    (bottom_up): ResNet(
+      (stem): BasicStem(
+        (conv1): Conv2d(
+          3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
+          (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        )
+      )
+      (res2): Sequential(
+        (0): BottleneckBlock(
+          (shortcut): Conv2d(
+            64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv1): Conv2d(
+            64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+        )
+        (1): BottleneckBlock(
+          (conv1): Conv2d(
+            256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+        )
+        (2): BottleneckBlock(
+          (conv1): Conv2d(
+            256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+        )
+      )
+      (res3): Sequential(
+        (0): BottleneckBlock(
+          (shortcut): Conv2d(
+            256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv1): Conv2d(
+            256, 128, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+        )
+        (1): BottleneckBlock(
+          (conv1): Conv2d(
+            512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+        )
+        (2): BottleneckBlock(
+          (conv1): Conv2d(
+            512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+        )
+        (3): BottleneckBlock(
+          (conv1): Conv2d(
+            512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+        )
+      )
+      (res4): Sequential(
+        (0): BottleneckBlock(
+          (shortcut): Conv2d(
+            512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+          (conv1): Conv2d(
+            512, 256, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (1): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (2): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (3): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (4): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (5): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+      )
+      (res5): Sequential(
+        (0): BottleneckBlock(
+          (shortcut): Conv2d(
+            1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+          )
+          (conv1): Conv2d(
+            1024, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+          )
+        )
+        (1): BottleneckBlock(
+          (conv1): Conv2d(
+            2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+          )
+        )
+        (2): BottleneckBlock(
+          (conv1): Conv2d(
+            2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+          )
+        )
+      )
+    )
+  )
+  (proposal_generator): RPN(
+    (rpn_head): StandardRPNHead(
+      (conv): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (objectness_logits): Conv2d(256, 3, kernel_size=(1, 1), stride=(1, 1))
+      (anchor_deltas): Conv2d(256, 12, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (anchor_generator): DefaultAnchorGenerator(
+      (cell_anchors): BufferList()
+    )
+  )
+  (roi_heads): StandardROIHeads(
+    (box_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(7, 7), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(7, 7), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(7, 7), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(7, 7), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (box_head): FastRCNNConvFCHead(
+      (flatten): Flatten(start_dim=1, end_dim=-1)
+      (fc1): Linear(in_features=12544, out_features=1024, bias=True)
+      (fc_relu1): ReLU()
+      (fc2): Linear(in_features=1024, out_features=1024, bias=True)
+      (fc_relu2): ReLU()
+    )
+    (box_predictor): FastRCNNOutputLayers(
+      (cls_score): Linear(in_features=1024, out_features=81, bias=True)
+      (bbox_pred): Linear(in_features=1024, out_features=320, bias=True)
+    )
+    (mask_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(14, 14), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(14, 14), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(14, 14), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(14, 14), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (mask_head): BCNetBilayerMaskHead(
+      (occ_convs): ModuleList(
+        (0-3): 4 x Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+      )
+      (occ_deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+      (occ_deconv_relu): ReLU()
+      (occ_predictor): Conv2d(256, 1, kernel_size=(1, 1), stride=(1, 1))
+      (tgt_convs): ModuleList(
+        (0): Conv2d(
+          512, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+        (1-3): 3 x Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+      )
+      (tgt_deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+      (tgt_deconv_relu): ReLU()
+      (tgt_predictor): Conv2d(256, 1, kernel_size=(1, 1), stride=(1, 1))
+      (occ_boundary_predictor): Conv2d(256, 1, kernel_size=(1, 1), stride=(1, 1))
+      (tgt_boundary_predictor): Conv2d(256, 1, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+)
+[05/25 19:14:41] d2.data.dataset_mapper INFO: [DatasetMapper] Augmentations used in training: [ResizeShortestEdge(short_edge_length=(400, 500, 600), max_size=800, sample_style='choice'), RandomFlip()]
+[05/25 19:14:41] d2.data.datasets.coco INFO: Loaded 100 images in COCO format from D:\00workshop\pythonProjects\BCNet\data\cocoa-cls\annotations\cocoa_mini_test_with_occluder.json
+[05/25 19:14:41] d2.data.build INFO: Removed 0 images with no usable annotations. 100 images left.
+[05/25 19:14:41] d2.data.build INFO: Distribution of instances among all 80 categories:
+|   category    | #instances   |   category   | #instances   |   category    | #instances   |
+|:-------------:|:-------------|:------------:|:-------------|:-------------:|:-------------|
+|    person     | 66           |   bicycle    | 2            |      car      | 12           |
+|  motorcycle   | 0            |   airplane   | 0            |      bus      | 2            |
+|     train     | 1            |    truck     | 1            |     boat      | 2            |
+| traffic light | 0            | fire hydrant | 0            |   stop sign   | 0            |
+| parking meter | 0            |    bench     | 2            |     bird      | 0            |
+|      cat      | 0            |     dog      | 0            |     horse     | 0            |
+|     sheep     | 2            |     cow      | 0            |   elephant    | 0            |
+|     bear      | 1            |    zebra     | 8            |    giraffe    | 0            |
+|   backpack    | 0            |   umbrella   | 4            |    handbag    | 3            |
+|      tie      | 0            |   suitcase   | 2            |    frisbee    | 1            |
+|     skis      | 0            |  snowboard   | 0            |  sports ball  | 0            |
+|     kite      | 0            | baseball bat | 2            | baseball gl.. | 0            |
+|  skateboard   | 2            |  surfboard   | 0            | tennis racket | 1            |
+|    bottle     | 3            |  wine glass  | 0            |      cup      | 4            |
+|     fork      | 0            |    knife     | 3            |     spoon     | 0            |
+|     bowl      | 2            |    banana    | 1            |     apple     | 1            |
+|   sandwich    | 5            |    orange    | 0            |   broccoli    | 3            |
+|    carrot     | 0            |   hot dog    | 1            |     pizza     | 0            |
+|     donut     | 4            |     cake     | 0            |     chair     | 11           |
+|     couch     | 1            | potted plant | 0            |      bed      | 0            |
+| dining table  | 8            |    toilet    | 1            |      tv       | 2            |
+|    laptop     | 0            |    mouse     | 1            |    remote     | 3            |
+|   keyboard    | 1            |  cell phone  | 2            |   microwave   | 2            |
+|     oven      | 1            |   toaster    | 0            |     sink      | 0            |
+| refrigerator  | 0            |     book     | 4            |     clock     | 0            |
+|     vase      | 1            |   scissors   | 1            |  teddy bear   | 2            |
+|  hair drier   | 0            |  toothbrush  | 0            |               |              |
+|     total     | 182          |              |              |               |              |
+[05/25 19:14:41] d2.data.build INFO: Using training sampler TrainingSampler
+[05/25 19:14:41] d2.data.common INFO: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[05/25 19:14:41] d2.data.common INFO: Serializing 100 elements to byte tensors and concatenating them all ...
+[05/25 19:14:41] d2.data.common INFO: Serialized dataset takes 0.35 MiB
+[05/25 19:14:41] d2.data.build INFO: Making batched data loader with batch_size=1
+[05/25 19:14:41] d2.checkpoint.detection_checkpoint INFO: [DetectionCheckpointer] Loading from detectron2://ImageNetPretrained/MSRA/R-50.pkl ...
+[05/25 19:14:41] fvcore.common.checkpoint INFO: [Checkpointer] Loading from C:\Users\thank/.torch/iopath_cache\detectron2/ImageNetPretrained/MSRA\R-50.pkl ...
+[05/25 19:14:41] d2.checkpoint.c2_model_loading INFO: Renaming Caffe2 weights ......
+[05/25 19:14:41] d2.checkpoint.c2_model_loading INFO: Following weights matched with submodule backbone.bottom_up - Total num: 54
+[05/25 19:14:41] fvcore.common.checkpoint WARNING: Some model parameters or buffers are not found in the checkpoint:
+backbone.fpn_lateral2.{bias, weight}
+backbone.fpn_lateral3.{bias, weight}
+backbone.fpn_lateral4.{bias, weight}
+backbone.fpn_lateral5.{bias, weight}
+backbone.fpn_output2.{bias, weight}
+backbone.fpn_output3.{bias, weight}
+backbone.fpn_output4.{bias, weight}
+backbone.fpn_output5.{bias, weight}
+proposal_generator.rpn_head.anchor_deltas.{bias, weight}
+proposal_generator.rpn_head.conv.{bias, weight}
+proposal_generator.rpn_head.objectness_logits.{bias, weight}
+roi_heads.box_head.fc1.{bias, weight}
+roi_heads.box_head.fc2.{bias, weight}
+roi_heads.box_predictor.bbox_pred.{bias, weight}
+roi_heads.box_predictor.cls_score.{bias, weight}
+roi_heads.mask_head.occ_boundary_predictor.{bias, weight}
+roi_heads.mask_head.occ_convs.0.{bias, weight}
+roi_heads.mask_head.occ_convs.1.{bias, weight}
+roi_heads.mask_head.occ_convs.2.{bias, weight}
+roi_heads.mask_head.occ_convs.3.{bias, weight}
+roi_heads.mask_head.occ_deconv.{bias, weight}
+roi_heads.mask_head.occ_predictor.{bias, weight}
+roi_heads.mask_head.tgt_boundary_predictor.{bias, weight}
+roi_heads.mask_head.tgt_convs.0.{bias, weight}
+roi_heads.mask_head.tgt_convs.1.{bias, weight}
+roi_heads.mask_head.tgt_convs.2.{bias, weight}
+roi_heads.mask_head.tgt_convs.3.{bias, weight}
+roi_heads.mask_head.tgt_deconv.{bias, weight}
+roi_heads.mask_head.tgt_predictor.{bias, weight}
+[05/25 19:14:41] fvcore.common.checkpoint WARNING: The checkpoint state_dict contains keys that are not used by the model:
+  fc1000.{bias, weight}
+  stem.conv1.bias
+[05/25 19:14:41] d2.engine.train_loop INFO: Starting training from iteration 0
+[05/25 19:14:57] d2.utils.events INFO:  eta: 0:24:29  iter: 19  total_loss: 5.096  loss_cls: 1.664  loss_box_reg: 0.004363  loss_mask: 0.6872  loss_occluder_mask: 0.6324  loss_occludee_boundary: 0.6891  loss_occluder_boundary: 0.7985  loss_rpn_cls: 0.7024  loss_rpn_loc: 0.01426    time: 0.7448  last_time: 0.7866  data_time: 0.0445  last_data_time: 0.0315   lr: 0.00047702  max_mem: 661M
+[05/25 19:15:12] d2.utils.events INFO:  eta: 0:22:13  iter: 39  total_loss: 3.281  loss_cls: 0.7158  loss_box_reg: 0.1972  loss_mask: 0.6479  loss_occluder_mask: 0.09162  loss_occludee_boundary: 0.6592  loss_occluder_boundary: 0.5899  loss_rpn_cls: 0.2385  loss_rpn_loc: 0.008843    time: 0.7283  last_time: 0.6612  data_time: 0.0243  last_data_time: 0.0147   lr: 0.00097652  max_mem: 671M
+[05/25 19:15:28] d2.utils.events INFO:  eta: 0:24:50  iter: 59  total_loss: 3.227  loss_cls: 0.6518  loss_box_reg: 0.328  loss_mask: 0.6559  loss_occluder_mask: 0.02952  loss_occludee_boundary: 0.6627  loss_occluder_boundary: 0.4982  loss_rpn_cls: 0.1007  loss_rpn_loc: 0.01427    time: 0.7569  last_time: 0.7927  data_time: 0.0250  last_data_time: 0.0195   lr: 0.001476  max_mem: 671M
+[05/25 19:15:44] d2.utils.events INFO:  eta: 0:24:38  iter: 79  total_loss: 2.694  loss_cls: 0.5234  loss_box_reg: 0.2566  loss_mask: 0.6054  loss_occluder_mask: 0.02272  loss_occludee_boundary: 0.6542  loss_occluder_boundary: 0.3896  loss_rpn_cls: 0.05109  loss_rpn_loc: 0.006392    time: 0.7682  last_time: 0.7667  data_time: 0.0207  last_data_time: 0.0192   lr: 0.0019755  max_mem: 719M
+[05/25 19:15:58] d2.utils.events INFO:  eta: 0:23:46  iter: 99  total_loss: 2.032  loss_cls: 0.376  loss_box_reg: 0.1725  loss_mask: 0.6098  loss_occluder_mask: 0.01894  loss_occludee_boundary: 0.6474  loss_occluder_boundary: 0.04311  loss_rpn_cls: 0.06272  loss_rpn_loc: 0.01311    time: 0.7589  last_time: 0.7522  data_time: 0.0242  last_data_time: 0.0146   lr: 0.002475  max_mem: 719M
+[05/25 19:16:12] d2.utils.events INFO:  eta: 0:23:22  iter: 119  total_loss: 3.16  loss_cls: 0.5976  loss_box_reg: 0.4379  loss_mask: 0.6396  loss_occluder_mask: 0.1349  loss_occludee_boundary: 0.648  loss_occluder_boundary: 0.1294  loss_rpn_cls: 0.06539  loss_rpn_loc: 0.01123    time: 0.7490  last_time: 0.6251  data_time: 0.0242  last_data_time: 0.0334   lr: 0.0025  max_mem: 719M
+[05/25 19:16:28] d2.utils.events INFO:  eta: 0:23:11  iter: 139  total_loss: 2.667  loss_cls: 0.7066  loss_box_reg: 0.4517  loss_mask: 0.5813  loss_occluder_mask: 0.009963  loss_occludee_boundary: 0.6415  loss_occluder_boundary: 0.0106  loss_rpn_cls: 0.05875  loss_rpn_loc: 0.009364    time: 0.7525  last_time: 0.5345  data_time: 0.0211  last_data_time: 0.0169   lr: 0.0025  max_mem: 719M
+[05/25 19:16:44] d2.utils.events INFO:  eta: 0:23:01  iter: 159  total_loss: 3.424  loss_cls: 0.8892  loss_box_reg: 0.825  loss_mask: 0.5901  loss_occluder_mask: 0.02842  loss_occludee_boundary: 0.6366  loss_occluder_boundary: 0.06409  loss_rpn_cls: 0.06991  loss_rpn_loc: 0.01501    time: 0.7587  last_time: 0.6825  data_time: 0.0235  last_data_time: 0.0121   lr: 0.0025  max_mem: 719M
+[05/25 19:17:00] d2.utils.events INFO:  eta: 0:23:02  iter: 179  total_loss: 2.921  loss_cls: 0.8322  loss_box_reg: 0.6331  loss_mask: 0.61  loss_occluder_mask: 0.01294  loss_occludee_boundary: 0.6424  loss_occluder_boundary: 0.007474  loss_rpn_cls: 0.05028  loss_rpn_loc: 0.009903    time: 0.7648  last_time: 1.0356  data_time: 0.0211  last_data_time: 0.0268   lr: 0.0025  max_mem: 719M
+[05/25 19:17:17] d2.utils.events INFO:  eta: 0:22:57  iter: 199  total_loss: 2.742  loss_cls: 0.9262  loss_box_reg: 0.6316  loss_mask: 0.5586  loss_occluder_mask: 0.01642  loss_occludee_boundary: 0.6351  loss_occluder_boundary: 0.006296  loss_rpn_cls: 0.05138  loss_rpn_loc: 0.01549    time: 0.7723  last_time: 0.8743  data_time: 0.0235  last_data_time: 0.0177   lr: 0.0025  max_mem: 721M
+[05/25 19:17:33] d2.utils.events INFO:  eta: 0:22:41  iter: 219  total_loss: 3.046  loss_cls: 0.9633  loss_box_reg: 0.7269  loss_mask: 0.5423  loss_occluder_mask: 0.01143  loss_occludee_boundary: 0.6318  loss_occluder_boundary: 0.004393  loss_rpn_cls: 0.03513  loss_rpn_loc: 0.009105    time: 0.7757  last_time: 0.6929  data_time: 0.0211  last_data_time: 0.0213   lr: 0.0025  max_mem: 721M
+[05/25 19:17:50] d2.utils.events INFO:  eta: 0:22:33  iter: 239  total_loss: 3.431  loss_cls: 1.013  loss_box_reg: 0.7803  loss_mask: 0.5734  loss_occluder_mask: 0.05085  loss_occludee_boundary: 0.6292  loss_occluder_boundary: 0.0906  loss_rpn_cls: 0.04606  loss_rpn_loc: 0.01558    time: 0.7828  last_time: 0.6959  data_time: 0.0252  last_data_time: 0.0216   lr: 0.0025  max_mem: 721M
+[05/25 19:18:08] d2.utils.events INFO:  eta: 0:22:55  iter: 259  total_loss: 2.782  loss_cls: 0.8668  loss_box_reg: 0.6942  loss_mask: 0.5949  loss_occluder_mask: 0.02646  loss_occludee_boundary: 0.6353  loss_occluder_boundary: 0.007645  loss_rpn_cls: 0.04028  loss_rpn_loc: 0.01065    time: 0.7918  last_time: 1.1216  data_time: 0.0244  last_data_time: 0.0205   lr: 0.0025  max_mem: 721M
+[05/25 19:18:23] d2.utils.events INFO:  eta: 0:22:29  iter: 279  total_loss: 2.805  loss_cls: 0.6328  loss_box_reg: 0.6297  loss_mask: 0.5666  loss_occluder_mask: 0.006141  loss_occludee_boundary: 0.6336  loss_occluder_boundary: 0.001542  loss_rpn_cls: 0.04851  loss_rpn_loc: 0.01246    time: 0.7898  last_time: 0.4965  data_time: 0.0215  last_data_time: 0.0224   lr: 0.0025  max_mem: 721M
+[05/25 19:18:39] d2.utils.events INFO:  eta: 0:22:20  iter: 299  total_loss: 2.988  loss_cls: 0.8404  loss_box_reg: 0.7943  loss_mask: 0.509  loss_occluder_mask: 0.03905  loss_occludee_boundary: 0.6218  loss_occluder_boundary: 0.03157  loss_rpn_cls: 0.04616  loss_rpn_loc: 0.009163    time: 0.7901  last_time: 1.1375  data_time: 0.0220  last_data_time: 0.0367   lr: 0.0025  max_mem: 721M
+[05/25 19:18:56] d2.utils.events INFO:  eta: 0:22:08  iter: 319  total_loss: 2.629  loss_cls: 0.7275  loss_box_reg: 0.582  loss_mask: 0.5416  loss_occluder_mask: 0.004483  loss_occludee_boundary: 0.6278  loss_occluder_boundary: 0.0006284  loss_rpn_cls: 0.04916  loss_rpn_loc: 0.01479    time: 0.7913  last_time: 0.9906  data_time: 0.0222  last_data_time: 0.0186   lr: 0.0025  max_mem: 721M
+[05/25 19:19:12] d2.utils.events INFO:  eta: 0:21:53  iter: 339  total_loss: 2.893  loss_cls: 0.8385  loss_box_reg: 0.839  loss_mask: 0.5302  loss_occluder_mask: 0.02123  loss_occludee_boundary: 0.6223  loss_occluder_boundary: 0.01121  loss_rpn_cls: 0.04721  loss_rpn_loc: 0.01178    time: 0.7944  last_time: 1.0048  data_time: 0.0232  last_data_time: 0.0206   lr: 0.0025  max_mem: 721M
+[05/25 19:19:30] d2.utils.events INFO:  eta: 0:21:48  iter: 359  total_loss: 3.106  loss_cls: 0.8631  loss_box_reg: 0.7836  loss_mask: 0.5468  loss_occluder_mask: 0.02392  loss_occludee_boundary: 0.6285  loss_occluder_boundary: 0.02204  loss_rpn_cls: 0.04787  loss_rpn_loc: 0.01098    time: 0.7989  last_time: 1.0653  data_time: 0.0264  last_data_time: 0.0507   lr: 0.0025  max_mem: 722M
+[05/25 19:19:46] d2.utils.events INFO:  eta: 0:21:23  iter: 379  total_loss: 2.551  loss_cls: 0.5133  loss_box_reg: 0.6385  loss_mask: 0.5917  loss_occluder_mask: 0.02587  loss_occludee_boundary: 0.6312  loss_occluder_boundary: 0.01298  loss_rpn_cls: 0.05617  loss_rpn_loc: 0.01272    time: 0.8001  last_time: 0.8829  data_time: 0.0299  last_data_time: 0.0344   lr: 0.0025  max_mem: 722M
+[05/25 19:20:03] d2.utils.events INFO:  eta: 0:21:05  iter: 399  total_loss: 2.817  loss_cls: 0.7344  loss_box_reg: 0.8291  loss_mask: 0.5051  loss_occluder_mask: 0.002235  loss_occludee_boundary: 0.6071  loss_occluder_boundary: 0.0002358  loss_rpn_cls: 0.02925  loss_rpn_loc: 0.009371    time: 0.8010  last_time: 0.8837  data_time: 0.0218  last_data_time: 0.0215   lr: 0.0025  max_mem: 722M
+[05/25 19:20:19] d2.utils.events INFO:  eta: 0:20:51  iter: 419  total_loss: 2.591  loss_cls: 0.6051  loss_box_reg: 0.5948  loss_mask: 0.5854  loss_occluder_mask: 0.01187  loss_occludee_boundary: 0.6319  loss_occluder_boundary: 0.008104  loss_rpn_cls: 0.04285  loss_rpn_loc: 0.01746    time: 0.8006  last_time: 1.0202  data_time: 0.0253  last_data_time: 0.0393   lr: 0.0025  max_mem: 722M
+[05/25 19:20:36] d2.utils.events INFO:  eta: 0:20:45  iter: 439  total_loss: 3.034  loss_cls: 0.852  loss_box_reg: 0.8763  loss_mask: 0.5297  loss_occluder_mask: 0.01347  loss_occludee_boundary: 0.6143  loss_occluder_boundary: 0.005202  loss_rpn_cls: 0.03472  loss_rpn_loc: 0.009897    time: 0.8033  last_time: 1.0540  data_time: 0.0228  last_data_time: 0.0387   lr: 0.0025  max_mem: 722M
+[05/25 19:20:54] d2.utils.events INFO:  eta: 0:20:45  iter: 459  total_loss: 2.862  loss_cls: 0.7706  loss_box_reg: 0.7382  loss_mask: 0.5254  loss_occluder_mask: 0.01774  loss_occludee_boundary: 0.632  loss_occluder_boundary: 0.01061  loss_rpn_cls: 0.04478  loss_rpn_loc: 0.006906    time: 0.8076  last_time: 0.7346  data_time: 0.0264  last_data_time: 0.0198   lr: 0.0025  max_mem: 722M
+[05/25 19:21:10] d2.utils.events INFO:  eta: 0:20:28  iter: 479  total_loss: 2.755  loss_cls: 0.6166  loss_box_reg: 0.8524  loss_mask: 0.5115  loss_occluder_mask: 0.01469  loss_occludee_boundary: 0.6195  loss_occluder_boundary: 0.006076  loss_rpn_cls: 0.03333  loss_rpn_loc: 0.009629    time: 0.8080  last_time: 0.7643  data_time: 0.0236  last_data_time: 0.0399   lr: 0.0025  max_mem: 722M
+[05/25 19:21:26] d2.data.datasets.coco INFO: Loaded 100 images in COCO format from D:\00workshop\pythonProjects\BCNet\data\cocoa-cls\annotations\cocoa_mini_visible_eval.json
+[05/25 19:21:26] d2.data.dataset_mapper INFO: [DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(500, 500), max_size=800, sample_style='choice')]
+[05/25 19:21:26] d2.data.common INFO: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[05/25 19:21:26] d2.data.common INFO: Serializing 100 elements to byte tensors and concatenating them all ...
+[05/25 19:21:26] d2.data.common INFO: Serialized dataset takes 0.14 MiB
+[05/25 19:21:26] d2.evaluation.evaluator INFO: Start inference on 100 batches
+[05/25 19:21:28] d2.evaluation.evaluator INFO: Inference done 11/100. Dataloading: 0.0146 s/iter. Inference: 0.1146 s/iter. Eval: 0.0210 s/iter. Total: 0.1503 s/iter. ETA=0:00:13
+[05/25 19:21:33] d2.evaluation.evaluator INFO: Inference done 48/100. Dataloading: 0.0154 s/iter. Inference: 0.1060 s/iter. Eval: 0.0167 s/iter. Total: 0.1381 s/iter. ETA=0:00:07
+[05/25 19:21:38] d2.evaluation.evaluator INFO: Inference done 85/100. Dataloading: 0.0165 s/iter. Inference: 0.1046 s/iter. Eval: 0.0170 s/iter. Total: 0.1382 s/iter. ETA=0:00:02
+[05/25 19:21:40] d2.evaluation.evaluator INFO: Total inference time: 0:00:13.114862 (0.138051 s / iter per device, on 1 devices)
+[05/25 19:21:40] d2.evaluation.evaluator INFO: Total inference pure compute time: 0:00:09 (0.104464 s / iter per device, on 1 devices)
+[05/25 19:21:40] d2.evaluation.coco_evaluation INFO: Preparing results for COCO format ...
+[05/25 19:21:40] d2.evaluation.coco_evaluation INFO: Saving results to output\run2k_boundary\eval\cocoa_mini_visible_eval\coco_instances_results.json
+[05/25 19:21:40] d2.evaluation.coco_evaluation INFO: Evaluating predictions with unofficial COCO API...
+[05/25 19:21:40] d2.evaluation.fast_eval_api INFO: Evaluate annotation type *bbox*
+[05/25 19:21:40] d2.evaluation.fast_eval_api INFO: COCOeval_opt.evaluate() finished in 0.07 seconds.
+[05/25 19:21:40] d2.evaluation.fast_eval_api INFO: Accumulating evaluation results...
+[05/25 19:21:40] d2.evaluation.fast_eval_api INFO: COCOeval_opt.accumulate() finished in 0.11 seconds.
+[05/25 19:21:40] d2.evaluation.coco_evaluation INFO: Evaluation results for bbox: 
+|  AP   |  AP50  |  AP75  |  APs  |  APm  |  APl   |
+|:-----:|:------:|:------:|:-----:|:-----:|:------:|
+| 7.300 | 20.394 | 4.544  | 1.226 | 5.811 | 12.325 |
+[05/25 19:21:40] d2.evaluation.coco_evaluation INFO: Per-category bbox AP: 
+| category      | AP     | category     | AP     | category       | AP     |
+|:--------------|:-------|:-------------|:-------|:---------------|:-------|
+| person        | 1.761  | bicycle      | 17.977 | car            | 6.022  |
+| motorcycle    | nan    | airplane     | nan    | bus            | 0.000  |
+| train         | 2.857  | truck        | 0.000  | boat           | 0.000  |
+| traffic light | nan    | fire hydrant | nan    | stop sign      | nan    |
+| parking meter | nan    | bench        | 10.099 | bird           | nan    |
+| cat           | nan    | dog          | nan    | horse          | nan    |
+| sheep         | 0.000  | cow          | nan    | elephant       | nan    |
+| bear          | 0.000  | zebra        | 3.053  | giraffe        | nan    |
+| backpack      | nan    | umbrella     | 5.941  | handbag        | 0.000  |
+| tie           | nan    | suitcase     | 0.144  | frisbee        | 0.000  |
+| skis          | nan    | snowboard    | nan    | sports ball    | nan    |
+| kite          | nan    | baseball bat | 0.000  | baseball glove | nan    |
+| skateboard    | 0.000  | surfboard    | nan    | tennis racket  | 0.000  |
+| bottle        | 0.000  | wine glass   | nan    | cup            | 14.192 |
+| fork          | nan    | knife        | 13.465 | spoon          | nan    |
+| bowl          | 0.000  | banana       | 70.000 | apple          | 0.000  |
+| sandwich      | 6.803  | orange       | nan    | broccoli       | 20.198 |
+| carrot        | nan    | hot dog      | 50.000 | pizza          | nan    |
+| donut         | 0.000  | cake         | nan    | chair          | 0.878  |
+| couch         | 0.000  | potted plant | nan    | bed            | nan    |
+| dining table  | 29.450 | toilet       | 0.000  | tv             | 0.000  |
+| laptop        | nan    | mouse        | 0.000  | remote         | 0.000  |
+| keyboard      | 0.000  | cell phone   | 0.000  | microwave      | 4.076  |
+| oven          | 0.000  | toaster      | nan    | sink           | nan    |
+| refrigerator  | nan    | book         | 22.970 | clock          | nan    |
+| vase          | 24.000 | scissors     | 10.000 | teddy bear     | 0.000  |
+| hair drier    | nan    | toothbrush   | nan    |                |        |
+[05/25 19:21:40] d2.evaluation.fast_eval_api INFO: Evaluate annotation type *segm*
+[05/25 19:21:41] d2.evaluation.fast_eval_api INFO: COCOeval_opt.evaluate() finished in 0.14 seconds.
+[05/25 19:21:41] d2.evaluation.fast_eval_api INFO: Accumulating evaluation results...
+[05/25 19:21:41] d2.evaluation.fast_eval_api INFO: COCOeval_opt.accumulate() finished in 0.11 seconds.
+[05/25 19:21:41] d2.evaluation.coco_evaluation INFO: Evaluation results for segm: 
+|  AP   |  AP50  |  AP75  |  APs  |  APm  |  APl  |
+|:-----:|:------:|:------:|:-----:|:-----:|:-----:|
+| 1.013 | 4.433  | 0.130  | 0.958 | 1.162 | 2.240 |
+[05/25 19:21:41] d2.evaluation.coco_evaluation INFO: Per-category segm AP: 
+| category      | AP    | category     | AP    | category       | AP     |
+|:--------------|:------|:-------------|:------|:---------------|:-------|
+| person        | 0.428 | bicycle      | 1.443 | car            | 4.580  |
+| motorcycle    | nan   | airplane     | nan   | bus            | 0.000  |
+| train         | 0.000 | truck        | 0.000 | boat           | 0.000  |
+| traffic light | nan   | fire hydrant | nan   | stop sign      | nan    |
+| parking meter | nan   | bench        | 0.000 | bird           | nan    |
+| cat           | nan   | dog          | nan   | horse          | nan    |
+| sheep         | 0.000 | cow          | nan   | elephant       | nan    |
+| bear          | 0.000 | zebra        | 0.000 | giraffe        | nan    |
+| backpack      | nan   | umbrella     | 0.000 | handbag        | 0.000  |
+| tie           | nan   | suitcase     | 0.072 | frisbee        | 0.000  |
+| skis          | nan   | snowboard    | nan   | sports ball    | nan    |
+| kite          | nan   | baseball bat | 0.000 | baseball glove | nan    |
+| skateboard    | 0.000 | surfboard    | nan   | tennis racket  | 0.000  |
+| bottle        | 0.000 | wine glass   | nan   | cup            | 0.858  |
+| fork          | nan   | knife        | 0.000 | spoon          | nan    |
+| bowl          | 0.000 | banana       | 0.000 | apple          | 0.000  |
+| sandwich      | 4.092 | orange       | nan   | broccoli       | 0.000  |
+| carrot        | nan   | hot dog      | 0.000 | pizza          | nan    |
+| donut         | 0.000 | cake         | nan   | chair          | 0.000  |
+| couch         | 0.000 | potted plant | nan   | bed            | nan    |
+| dining table  | 0.000 | toilet       | 0.000 | tv             | 0.000  |
+| laptop        | nan   | mouse        | 0.000 | remote         | 0.000  |
+| keyboard      | 0.000 | cell phone   | 6.312 | microwave      | 20.759 |
+| oven          | 0.000 | toaster      | nan   | sink           | nan    |
+| refrigerator  | nan   | book         | 0.000 | clock          | nan    |
+| vase          | 5.000 | scissors     | 0.000 | teddy bear     | 0.000  |
+| hair drier    | nan   | toothbrush   | nan   |                |        |
+[05/25 19:21:41] d2.engine.defaults INFO: Evaluation results for cocoa_mini_visible_eval in csv format:
+[05/25 19:21:41] d2.evaluation.testing INFO: copypaste: Task: bbox
+[05/25 19:21:41] d2.evaluation.testing INFO: copypaste: AP,AP50,AP75,APs,APm,APl
+[05/25 19:21:41] d2.evaluation.testing INFO: copypaste: 7.2997,20.3936,4.5437,1.2264,5.8108,12.3252
+[05/25 19:21:41] d2.evaluation.testing INFO: copypaste: Task: segm
+[05/25 19:21:41] d2.evaluation.testing INFO: copypaste: AP,AP50,AP75,APs,APm,APl
+[05/25 19:21:41] d2.evaluation.testing INFO: copypaste: 1.0126,4.4332,0.1305,0.9575,1.1616,2.2398
+[05/25 19:21:41] d2.utils.events INFO:  eta: 0:20:12  iter: 499  total_loss: 2.648  loss_cls: 0.6738  loss_box_reg: 0.6916  loss_mask: 0.5243  loss_occluder_mask: 0.01622  loss_occludee_boundary: 0.6045  loss_occluder_boundary: 0.009108  loss_rpn_cls: 0.03177  loss_rpn_loc: 0.007849    time: 0.8078  last_time: 0.9808  data_time: 0.0192  last_data_time: 0.0221   lr: 0.0025  max_mem: 722M
+[05/25 19:21:58] d2.utils.events INFO:  eta: 0:19:57  iter: 519  total_loss: 2.398  loss_cls: 0.6311  loss_box_reg: 0.8386  loss_mask: 0.5452  loss_occluder_mask: 0.01816  loss_occludee_boundary: 0.6169  loss_occluder_boundary: 0.01675  loss_rpn_cls: 0.02938  loss_rpn_loc: 0.00757    time: 0.8100  last_time: 0.8609  data_time: 0.0232  last_data_time: 0.0184   lr: 0.0025  max_mem: 722M
+[05/25 19:22:15] d2.utils.events INFO:  eta: 0:19:40  iter: 539  total_loss: 3.037  loss_cls: 0.6146  loss_box_reg: 0.9014  loss_mask: 0.4825  loss_occluder_mask: 0.02748  loss_occludee_boundary: 0.613  loss_occluder_boundary: 0.01548  loss_rpn_cls: 0.03911  loss_rpn_loc: 0.01033    time: 0.8118  last_time: 1.1044  data_time: 0.0247  last_data_time: 0.0435   lr: 0.0025  max_mem: 722M
+[05/25 19:22:30] d2.utils.events INFO:  eta: 0:19:22  iter: 559  total_loss: 2.293  loss_cls: 0.5198  loss_box_reg: 0.6471  loss_mask: 0.5173  loss_occluder_mask: 0.004498  loss_occludee_boundary: 0.6153  loss_occluder_boundary: 0.00032  loss_rpn_cls: 0.03119  loss_rpn_loc: 0.007957    time: 0.8097  last_time: 0.6468  data_time: 0.0206  last_data_time: 0.0153   lr: 0.0025  max_mem: 722M
+[05/25 19:22:48] d2.utils.events INFO:  eta: 0:19:09  iter: 579  total_loss: 2.257  loss_cls: 0.5377  loss_box_reg: 0.7182  loss_mask: 0.4502  loss_occluder_mask: 0.007468  loss_occludee_boundary: 0.6027  loss_occluder_boundary: 0.005572  loss_rpn_cls: 0.03659  loss_rpn_loc: 0.007589    time: 0.8118  last_time: 0.7125  data_time: 0.0226  last_data_time: 0.0130   lr: 0.0025  max_mem: 722M
+[05/25 19:23:04] d2.utils.events INFO:  eta: 0:18:53  iter: 599  total_loss: 2.626  loss_cls: 0.7806  loss_box_reg: 0.7513  loss_mask: 0.5045  loss_occluder_mask: 0.0123  loss_occludee_boundary: 0.6044  loss_occluder_boundary: 0.005396  loss_rpn_cls: 0.03165  loss_rpn_loc: 0.007241    time: 0.8113  last_time: 0.9341  data_time: 0.0207  last_data_time: 0.0394   lr: 0.0025  max_mem: 722M
+[05/25 19:23:20] d2.utils.events INFO:  eta: 0:18:37  iter: 619  total_loss: 2.808  loss_cls: 0.5622  loss_box_reg: 0.9079  loss_mask: 0.5268  loss_occluder_mask: 0.01382  loss_occludee_boundary: 0.6097  loss_occluder_boundary: 0.01277  loss_rpn_cls: 0.03655  loss_rpn_loc: 0.01345    time: 0.8119  last_time: 1.0220  data_time: 0.0221  last_data_time: 0.0151   lr: 0.0025  max_mem: 722M
+[05/25 19:23:37] d2.utils.events INFO:  eta: 0:18:21  iter: 639  total_loss: 2.155  loss_cls: 0.4983  loss_box_reg: 0.6217  loss_mask: 0.5294  loss_occluder_mask: 0.01198  loss_occludee_boundary: 0.6076  loss_occluder_boundary: 0.001644  loss_rpn_cls: 0.02579  loss_rpn_loc: 0.00578    time: 0.8119  last_time: 0.8645  data_time: 0.0200  last_data_time: 0.0172   lr: 0.0025  max_mem: 722M
+[05/25 19:23:53] d2.utils.events INFO:  eta: 0:18:02  iter: 659  total_loss: 2.56  loss_cls: 0.5377  loss_box_reg: 0.7668  loss_mask: 0.4551  loss_occluder_mask: 0.008954  loss_occludee_boundary: 0.5872  loss_occluder_boundary: 0.00221  loss_rpn_cls: 0.02681  loss_rpn_loc: 0.00729    time: 0.8117  last_time: 1.0871  data_time: 0.0205  last_data_time: 0.0200   lr: 0.0025  max_mem: 722M
+[05/25 19:24:09] d2.utils.events INFO:  eta: 0:17:45  iter: 679  total_loss: 2.674  loss_cls: 0.5972  loss_box_reg: 0.7487  loss_mask: 0.4777  loss_occluder_mask: 0.002489  loss_occludee_boundary: 0.6209  loss_occluder_boundary: 0.000308  loss_rpn_cls: 0.02521  loss_rpn_loc: 0.008575    time: 0.8111  last_time: 0.7168  data_time: 0.0207  last_data_time: 0.0208   lr: 0.0025  max_mem: 722M
+[05/25 19:24:26] d2.utils.events INFO:  eta: 0:17:31  iter: 699  total_loss: 2.529  loss_cls: 0.5851  loss_box_reg: 0.8011  loss_mask: 0.5307  loss_occluder_mask: 0.01092  loss_occludee_boundary: 0.6238  loss_occluder_boundary: 0.00812  loss_rpn_cls: 0.03799  loss_rpn_loc: 0.01277    time: 0.8123  last_time: 0.8782  data_time: 0.0244  last_data_time: 0.0291   lr: 0.0025  max_mem: 722M
+[05/25 19:24:43] d2.utils.events INFO:  eta: 0:17:17  iter: 719  total_loss: 2.944  loss_cls: 0.66  loss_box_reg: 0.8318  loss_mask: 0.4799  loss_occluder_mask: 0.009563  loss_occludee_boundary: 0.5987  loss_occluder_boundary: 0.006656  loss_rpn_cls: 0.03673  loss_rpn_loc: 0.009156    time: 0.8135  last_time: 1.0255  data_time: 0.0222  last_data_time: 0.0304   lr: 0.0025  max_mem: 722M
+[05/25 19:24:59] d2.utils.events INFO:  eta: 0:17:00  iter: 739  total_loss: 2.269  loss_cls: 0.4584  loss_box_reg: 0.6271  loss_mask: 0.4653  loss_occluder_mask: 0.003742  loss_occludee_boundary: 0.608  loss_occluder_boundary: 0.001924  loss_rpn_cls: 0.03777  loss_rpn_loc: 0.009764    time: 0.8130  last_time: 0.6533  data_time: 0.0218  last_data_time: 0.0161   lr: 0.0025  max_mem: 722M
+[05/25 19:25:15] d2.utils.events INFO:  eta: 0:16:44  iter: 759  total_loss: 3.096  loss_cls: 0.9013  loss_box_reg: 0.7666  loss_mask: 0.4878  loss_occluder_mask: 0.00088  loss_occludee_boundary: 0.6082  loss_occluder_boundary: 5.402e-05  loss_rpn_cls: 0.03023  loss_rpn_loc: 0.00776    time: 0.8131  last_time: 0.9480  data_time: 0.0195  last_data_time: 0.0235   lr: 0.0025  max_mem: 722M
+[05/25 19:25:31] d2.utils.events INFO:  eta: 0:16:27  iter: 779  total_loss: 3.108  loss_cls: 0.7699  loss_box_reg: 0.8758  loss_mask: 0.5065  loss_occluder_mask: 0.01795  loss_occludee_boundary: 0.598  loss_occluder_boundary: 0.02341  loss_rpn_cls: 0.05347  loss_rpn_loc: 0.01386    time: 0.8134  last_time: 0.7398  data_time: 0.0217  last_data_time: 0.0254   lr: 0.0025  max_mem: 722M
+[05/25 19:25:48] d2.utils.events INFO:  eta: 0:16:12  iter: 799  total_loss: 2.504  loss_cls: 0.4736  loss_box_reg: 0.8859  loss_mask: 0.4948  loss_occluder_mask: 0.01583  loss_occludee_boundary: 0.5878  loss_occluder_boundary: 0.005176  loss_rpn_cls: 0.0266  loss_rpn_loc: 0.009417    time: 0.8138  last_time: 0.8753  data_time: 0.0229  last_data_time: 0.0185   lr: 0.0025  max_mem: 722M
+[05/25 19:26:05] d2.utils.events INFO:  eta: 0:16:01  iter: 819  total_loss: 2.456  loss_cls: 0.589  loss_box_reg: 0.8069  loss_mask: 0.5101  loss_occluder_mask: 0.01268  loss_occludee_boundary: 0.6007  loss_occluder_boundary: 0.006894  loss_rpn_cls: 0.02257  loss_rpn_loc: 0.009535    time: 0.8143  last_time: 0.8825  data_time: 0.0207  last_data_time: 0.0256   lr: 0.0025  max_mem: 722M
+[05/25 19:26:22] d2.utils.events INFO:  eta: 0:15:47  iter: 839  total_loss: 2.401  loss_cls: 0.563  loss_box_reg: 0.7678  loss_mask: 0.4835  loss_occluder_mask: 0.004384  loss_occludee_boundary: 0.609  loss_occluder_boundary: 0.0009951  loss_rpn_cls: 0.0352  loss_rpn_loc: 0.009549    time: 0.8150  last_time: 0.8658  data_time: 0.0213  last_data_time: 0.0178   lr: 0.0025  max_mem: 722M
+[05/25 19:26:39] d2.utils.events INFO:  eta: 0:15:35  iter: 859  total_loss: 2.57  loss_cls: 0.5845  loss_box_reg: 0.849  loss_mask: 0.4554  loss_occluder_mask: 0.00421  loss_occludee_boundary: 0.5797  loss_occluder_boundary: 0.000864  loss_rpn_cls: 0.02092  loss_rpn_loc: 0.0085    time: 0.8159  last_time: 0.6728  data_time: 0.0229  last_data_time: 0.0148   lr: 0.0025  max_mem: 722M
+[05/25 19:26:56] d2.utils.events INFO:  eta: 0:15:20  iter: 879  total_loss: 2.376  loss_cls: 0.5926  loss_box_reg: 0.884  loss_mask: 0.3787  loss_occluder_mask: 0.009386  loss_occludee_boundary: 0.576  loss_occluder_boundary: 0.006576  loss_rpn_cls: 0.02787  loss_rpn_loc: 0.01087    time: 0.8170  last_time: 0.7885  data_time: 0.0217  last_data_time: 0.0142   lr: 0.0025  max_mem: 722M
+[05/25 19:27:13] d2.utils.events INFO:  eta: 0:15:04  iter: 899  total_loss: 2.808  loss_cls: 0.6737  loss_box_reg: 0.8959  loss_mask: 0.4843  loss_occluder_mask: 0.01155  loss_occludee_boundary: 0.5989  loss_occluder_boundary: 0.009703  loss_rpn_cls: 0.03467  loss_rpn_loc: 0.01269    time: 0.8177  last_time: 0.8699  data_time: 0.0240  last_data_time: 0.0240   lr: 0.0025  max_mem: 722M
+[05/25 19:27:29] d2.utils.events INFO:  eta: 0:14:46  iter: 919  total_loss: 2.484  loss_cls: 0.4398  loss_box_reg: 0.9429  loss_mask: 0.5091  loss_occluder_mask: 0.01034  loss_occludee_boundary: 0.5813  loss_occluder_boundary: 0.005511  loss_rpn_cls: 0.02638  loss_rpn_loc: 0.009345    time: 0.8172  last_time: 0.6861  data_time: 0.0204  last_data_time: 0.0220   lr: 0.0025  max_mem: 722M
+[05/25 19:27:46] d2.utils.events INFO:  eta: 0:14:31  iter: 939  total_loss: 2.909  loss_cls: 0.5047  loss_box_reg: 0.8565  loss_mask: 0.4511  loss_occluder_mask: 0.01982  loss_occludee_boundary: 0.5874  loss_occluder_boundary: 0.02496  loss_rpn_cls: 0.03174  loss_rpn_loc: 0.008986    time: 0.8182  last_time: 0.8975  data_time: 0.0220  last_data_time: 0.0186   lr: 0.0025  max_mem: 722M
+[05/25 19:28:03] d2.utils.events INFO:  eta: 0:14:14  iter: 959  total_loss: 2.024  loss_cls: 0.3358  loss_box_reg: 0.6431  loss_mask: 0.4247  loss_occluder_mask: 0.002587  loss_occludee_boundary: 0.5625  loss_occluder_boundary: 0.0002988  loss_rpn_cls: 0.01596  loss_rpn_loc: 0.0103    time: 0.8184  last_time: 1.0294  data_time: 0.0213  last_data_time: 0.0245   lr: 0.0025  max_mem: 722M
+[05/25 19:28:18] d2.utils.events INFO:  eta: 0:13:56  iter: 979  total_loss: 2.389  loss_cls: 0.6364  loss_box_reg: 0.8191  loss_mask: 0.5013  loss_occluder_mask: 0.003755  loss_occludee_boundary: 0.5968  loss_occluder_boundary: 0.001251  loss_rpn_cls: 0.02785  loss_rpn_loc: 0.009575    time: 0.8176  last_time: 0.5338  data_time: 0.0221  last_data_time: 0.0160   lr: 0.0025  max_mem: 722M
+[05/25 19:28:35] fvcore.common.checkpoint INFO: Saving checkpoint to ./output/run2k_boundary\model_0000999.pth
+[05/25 19:28:36] d2.data.datasets.coco INFO: Loaded 100 images in COCO format from D:\00workshop\pythonProjects\BCNet\data\cocoa-cls\annotations\cocoa_mini_visible_eval.json
+[05/25 19:28:36] d2.data.dataset_mapper INFO: [DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(500, 500), max_size=800, sample_style='choice')]
+[05/25 19:28:36] d2.data.common INFO: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[05/25 19:28:36] d2.data.common INFO: Serializing 100 elements to byte tensors and concatenating them all ...
+[05/25 19:28:36] d2.data.common INFO: Serialized dataset takes 0.14 MiB
+[05/25 19:28:36] d2.evaluation.evaluator INFO: Start inference on 100 batches
+[05/25 19:28:37] d2.evaluation.evaluator INFO: Inference done 11/100. Dataloading: 0.0121 s/iter. Inference: 0.0861 s/iter. Eval: 0.0070 s/iter. Total: 0.1051 s/iter. ETA=0:00:09
+[05/25 19:28:42] d2.evaluation.evaluator INFO: Inference done 53/100. Dataloading: 0.0144 s/iter. Inference: 0.0925 s/iter. Eval: 0.0103 s/iter. Total: 0.1173 s/iter. ETA=0:00:05
+[05/25 19:28:47] d2.evaluation.evaluator INFO: Inference done 95/100. Dataloading: 0.0152 s/iter. Inference: 0.0935 s/iter. Eval: 0.0108 s/iter. Total: 0.1196 s/iter. ETA=0:00:00
+[05/25 19:28:48] d2.evaluation.evaluator INFO: Total inference time: 0:00:11.319167 (0.119149 s / iter per device, on 1 devices)
+[05/25 19:28:48] d2.evaluation.evaluator INFO: Total inference pure compute time: 0:00:08 (0.093435 s / iter per device, on 1 devices)
+[05/25 19:28:48] d2.evaluation.coco_evaluation INFO: Preparing results for COCO format ...
+[05/25 19:28:48] d2.evaluation.coco_evaluation INFO: Saving results to output\run2k_boundary\eval\cocoa_mini_visible_eval\coco_instances_results.json
+[05/25 19:28:48] d2.evaluation.coco_evaluation INFO: Evaluating predictions with unofficial COCO API...
+[05/25 19:28:48] d2.evaluation.fast_eval_api INFO: Evaluate annotation type *bbox*
+[05/25 19:28:48] d2.evaluation.fast_eval_api INFO: COCOeval_opt.evaluate() finished in 0.06 seconds.
+[05/25 19:28:48] d2.evaluation.fast_eval_api INFO: Accumulating evaluation results...
+[05/25 19:28:48] d2.evaluation.fast_eval_api INFO: COCOeval_opt.accumulate() finished in 0.13 seconds.
+[05/25 19:28:48] d2.evaluation.coco_evaluation INFO: Evaluation results for bbox: 
+|  AP   |  AP50  |  AP75  |  APs  |  APm   |  APl   |
+|:-----:|:------:|:------:|:-----:|:------:|:------:|
+| 9.813 | 33.029 | 3.909  | 1.818 | 12.511 | 13.479 |
+[05/25 19:28:48] d2.evaluation.coco_evaluation INFO: Per-category bbox AP: 
+| category      | AP     | category     | AP     | category       | AP     |
+|:--------------|:-------|:-------------|:-------|:---------------|:-------|
+| person        | 3.535  | bicycle      | 15.149 | car            | 1.689  |
+| motorcycle    | nan    | airplane     | nan    | bus            | 0.000  |
+| train         | 0.000  | truck        | 0.000  | boat           | 12.624 |
+| traffic light | nan    | fire hydrant | nan    | stop sign      | nan    |
+| parking meter | nan    | bench        | 10.099 | bird           | nan    |
+| cat           | nan    | dog          | nan    | horse          | nan    |
+| sheep         | 5.050  | cow          | nan    | elephant       | nan    |
+| bear          | 0.000  | zebra        | 5.222  | giraffe        | nan    |
+| backpack      | nan    | umbrella     | 23.291 | handbag        | 3.366  |
+| tie           | nan    | suitcase     | 0.000  | frisbee        | 0.000  |
+| skis          | nan    | snowboard    | nan    | sports ball    | nan    |
+| kite          | nan    | baseball bat | 0.000  | baseball glove | nan    |
+| skateboard    | 35.248 | surfboard    | nan    | tennis racket  | 6.667  |
+| bottle        | 7.327  | wine glass   | nan    | cup            | 0.603  |
+| fork          | nan    | knife        | 16.832 | spoon          | nan    |
+| bowl          | 10.077 | banana       | 40.000 | apple          | 0.000  |
+| sandwich      | 8.240  | orange       | nan    | broccoli       | 8.040  |
+| carrot        | nan    | hot dog      | 0.000  | pizza          | nan    |
+| donut         | 13.594 | cake         | nan    | chair          | 2.934  |
+| couch         | 1.250  | potted plant | nan    | bed            | nan    |
+| dining table  | 11.210 | toilet       | 21.250 | tv             | 0.000  |
+| laptop        | nan    | mouse        | 0.000  | remote         | 0.396  |
+| keyboard      | 0.000  | cell phone   | 3.787  | microwave      | 3.366  |
+| oven          | 40.000 | toaster      | nan    | sink           | nan    |
+| refrigerator  | nan    | book         | 23.960 | clock          | nan    |
+| vase          | 22.000 | scissors     | 30.000 | teddy bear     | 35.149 |
+| hair drier    | nan    | toothbrush   | nan    |                |        |
+[05/25 19:28:48] d2.evaluation.fast_eval_api INFO: Evaluate annotation type *segm*
+[05/25 19:28:48] d2.evaluation.fast_eval_api INFO: COCOeval_opt.evaluate() finished in 0.13 seconds.
+[05/25 19:28:48] d2.evaluation.fast_eval_api INFO: Accumulating evaluation results...
+[05/25 19:28:48] d2.evaluation.fast_eval_api INFO: COCOeval_opt.accumulate() finished in 0.13 seconds.
+[05/25 19:28:48] d2.evaluation.coco_evaluation INFO: Evaluation results for segm: 
+|  AP   |  AP50  |  AP75  |  APs  |  APm  |  APl  |
+|:-----:|:------:|:------:|:-----:|:-----:|:-----:|
+| 2.174 | 10.005 | 0.000  | 0.029 | 2.461 | 2.811 |
+[05/25 19:28:48] d2.evaluation.coco_evaluation INFO: Per-category segm AP: 
+| category      | AP     | category     | AP     | category       | AP     |
+|:--------------|:-------|:-------------|:-------|:---------------|:-------|
+| person        | 0.315  | bicycle      | 0.000  | car            | 0.999  |
+| motorcycle    | nan    | airplane     | nan    | bus            | 0.000  |
+| train         | 0.000  | truck        | 0.000  | boat           | 0.000  |
+| traffic light | nan    | fire hydrant | nan    | stop sign      | nan    |
+| parking meter | nan    | bench        | 0.000  | bird           | nan    |
+| cat           | nan    | dog          | nan    | horse          | nan    |
+| sheep         | 6.700  | cow          | nan    | elephant       | nan    |
+| bear          | 0.000  | zebra        | 0.000  | giraffe        | nan    |
+| backpack      | nan    | umbrella     | 0.000  | handbag        | 1.683  |
+| tie           | nan    | suitcase     | 0.000  | frisbee        | 0.000  |
+| skis          | nan    | snowboard    | nan    | sports ball    | nan    |
+| kite          | nan    | baseball bat | 0.000  | baseball glove | nan    |
+| skateboard    | 0.000  | surfboard    | nan    | tennis racket  | 0.000  |
+| bottle        | 3.366  | wine glass   | nan    | cup            | 0.000  |
+| fork          | nan    | knife        | 0.000  | spoon          | nan    |
+| bowl          | 0.000  | banana       | 0.000  | apple          | 0.000  |
+| sandwich      | 8.317  | orange       | nan    | broccoli       | 0.000  |
+| carrot        | nan    | hot dog      | 0.000  | pizza          | nan    |
+| donut         | 0.000  | cake         | nan    | chair          | 0.000  |
+| couch         | 0.000  | potted plant | nan    | bed            | nan    |
+| dining table  | 0.000  | toilet       | 10.000 | tv             | 0.000  |
+| laptop        | nan    | mouse        | 0.000  | remote         | 0.217  |
+| keyboard      | 0.000  | cell phone   | 0.000  | microwave      | 4.208  |
+| oven          | 0.000  | toaster      | nan    | sink           | nan    |
+| refrigerator  | nan    | book         | 0.000  | clock          | nan    |
+| vase          | 35.000 | scissors     | 0.000  | teddy bear     | 22.673 |
+| hair drier    | nan    | toothbrush   | nan    |                |        |
+[05/25 19:28:48] d2.engine.defaults INFO: Evaluation results for cocoa_mini_visible_eval in csv format:
+[05/25 19:28:48] d2.evaluation.testing INFO: copypaste: Task: bbox
+[05/25 19:28:48] d2.evaluation.testing INFO: copypaste: AP,AP50,AP75,APs,APm,APl
+[05/25 19:28:48] d2.evaluation.testing INFO: copypaste: 9.8129,33.0288,3.9095,1.8182,12.5108,13.4788
+[05/25 19:28:48] d2.evaluation.testing INFO: copypaste: Task: segm
+[05/25 19:28:48] d2.evaluation.testing INFO: copypaste: AP,AP50,AP75,APs,APm,APl
+[05/25 19:28:48] d2.evaluation.testing INFO: copypaste: 2.1739,10.0048,0.0000,0.0290,2.4609,2.8108
+[05/25 19:28:48] d2.utils.events INFO:  eta: 0:13:44  iter: 999  total_loss: 2.759  loss_cls: 0.4768  loss_box_reg: 0.9142  loss_mask: 0.4829  loss_occluder_mask: 0.003196  loss_occludee_boundary: 0.5998  loss_occluder_boundary: 0.002033  loss_rpn_cls: 0.03017  loss_rpn_loc: 0.01015    time: 0.8182  last_time: 1.0003  data_time: 0.0216  last_data_time: 0.0160   lr: 0.0025  max_mem: 722M
+[05/25 19:29:03] d2.utils.events INFO:  eta: 0:13:28  iter: 1019  total_loss: 2.54  loss_cls: 0.5537  loss_box_reg: 0.8729  loss_mask: 0.4595  loss_occluder_mask: 0.003383  loss_occludee_boundary: 0.5808  loss_occluder_boundary: 0.0008192  loss_rpn_cls: 0.02547  loss_rpn_loc: 0.009205    time: 0.8169  last_time: 0.6225  data_time: 0.0219  last_data_time: 0.0152   lr: 0.0025  max_mem: 722M
+[05/25 19:29:20] d2.utils.events INFO:  eta: 0:13:16  iter: 1039  total_loss: 2.557  loss_cls: 0.4946  loss_box_reg: 0.9634  loss_mask: 0.4495  loss_occluder_mask: 0.00284  loss_occludee_boundary: 0.5765  loss_occluder_boundary: 0.0006763  loss_rpn_cls: 0.01928  loss_rpn_loc: 0.005221    time: 0.8173  last_time: 0.5984  data_time: 0.0198  last_data_time: 0.0110   lr: 0.0025  max_mem: 722M
+[05/25 19:29:36] d2.utils.events INFO:  eta: 0:13:00  iter: 1059  total_loss: 2.281  loss_cls: 0.4249  loss_box_reg: 0.7784  loss_mask: 0.3917  loss_occluder_mask: 0.003671  loss_occludee_boundary: 0.5687  loss_occluder_boundary: 0.001288  loss_rpn_cls: 0.03168  loss_rpn_loc: 0.01066    time: 0.8176  last_time: 0.6317  data_time: 0.0229  last_data_time: 0.0192   lr: 0.0025  max_mem: 722M
+[05/25 19:29:54] d2.utils.events INFO:  eta: 0:12:46  iter: 1079  total_loss: 2.653  loss_cls: 0.4593  loss_box_reg: 0.9415  loss_mask: 0.4546  loss_occluder_mask: 0.004334  loss_occludee_boundary: 0.5756  loss_occluder_boundary: 0.003831  loss_rpn_cls: 0.02822  loss_rpn_loc: 0.01265    time: 0.8186  last_time: 1.0227  data_time: 0.0226  last_data_time: 0.0188   lr: 0.0025  max_mem: 722M
+[05/25 19:30:11] d2.utils.events INFO:  eta: 0:12:31  iter: 1099  total_loss: 2.589  loss_cls: 0.5322  loss_box_reg: 0.893  loss_mask: 0.3954  loss_occluder_mask: 0.007137  loss_occludee_boundary: 0.575  loss_occluder_boundary: 0.008596  loss_rpn_cls: 0.02454  loss_rpn_loc: 0.008196    time: 0.8188  last_time: 1.0222  data_time: 0.0213  last_data_time: 0.0151   lr: 0.0025  max_mem: 722M
+[05/25 19:30:26] d2.utils.events INFO:  eta: 0:12:17  iter: 1119  total_loss: 2.442  loss_cls: 0.5723  loss_box_reg: 0.9423  loss_mask: 0.4021  loss_occluder_mask: 0.0006267  loss_occludee_boundary: 0.5472  loss_occluder_boundary: 8.163e-05  loss_rpn_cls: 0.01926  loss_rpn_loc: 0.005946    time: 0.8183  last_time: 0.8123  data_time: 0.0185  last_data_time: 0.0211   lr: 0.0025  max_mem: 722M
+[05/25 19:30:44] d2.utils.events INFO:  eta: 0:12:03  iter: 1139  total_loss: 2.799  loss_cls: 0.6068  loss_box_reg: 1.003  loss_mask: 0.4035  loss_occluder_mask: 0.02629  loss_occludee_boundary: 0.5612  loss_occluder_boundary: 0.05107  loss_rpn_cls: 0.02512  loss_rpn_loc: 0.009687    time: 0.8194  last_time: 0.6834  data_time: 0.0254  last_data_time: 0.0218   lr: 0.0025  max_mem: 722M
+[05/25 19:31:00] d2.utils.events INFO:  eta: 0:11:46  iter: 1159  total_loss: 2.573  loss_cls: 0.4496  loss_box_reg: 0.7071  loss_mask: 0.3719  loss_occluder_mask: 0.001427  loss_occludee_boundary: 0.551  loss_occluder_boundary: 0.0001149  loss_rpn_cls: 0.01896  loss_rpn_loc: 0.00919    time: 0.8188  last_time: 0.8578  data_time: 0.0201  last_data_time: 0.0126   lr: 0.0025  max_mem: 722M
+[05/25 19:31:16] d2.utils.events INFO:  eta: 0:11:37  iter: 1179  total_loss: 2.318  loss_cls: 0.4844  loss_box_reg: 0.8229  loss_mask: 0.4142  loss_occluder_mask: 0.005702  loss_occludee_boundary: 0.5533  loss_occluder_boundary: 0.001277  loss_rpn_cls: 0.01702  loss_rpn_loc: 0.006526    time: 0.8190  last_time: 0.8592  data_time: 0.0217  last_data_time: 0.0132   lr: 0.0025  max_mem: 722M
+[05/25 19:31:34] d2.utils.events INFO:  eta: 0:11:21  iter: 1199  total_loss: 2.459  loss_cls: 0.4786  loss_box_reg: 0.8046  loss_mask: 0.4684  loss_occluder_mask: 0.00677  loss_occludee_boundary: 0.5883  loss_occluder_boundary: 0.003669  loss_rpn_cls: 0.01771  loss_rpn_loc: 0.01047    time: 0.8197  last_time: 0.7131  data_time: 0.0222  last_data_time: 0.0156   lr: 0.0025  max_mem: 722M
+[05/25 19:31:51] d2.utils.events INFO:  eta: 0:11:09  iter: 1219  total_loss: 2.25  loss_cls: 0.3907  loss_box_reg: 0.7882  loss_mask: 0.3519  loss_occluder_mask: 0.004748  loss_occludee_boundary: 0.5626  loss_occluder_boundary: 0.002033  loss_rpn_cls: 0.01783  loss_rpn_loc: 0.00997    time: 0.8202  last_time: 0.6942  data_time: 0.0221  last_data_time: 0.0383   lr: 0.0025  max_mem: 722M
+[05/25 19:32:07] d2.utils.events INFO:  eta: 0:10:48  iter: 1239  total_loss: 2.553  loss_cls: 0.5408  loss_box_reg: 0.9041  loss_mask: 0.4435  loss_occluder_mask: 0.005487  loss_occludee_boundary: 0.5883  loss_occluder_boundary: 0.008383  loss_rpn_cls: 0.01961  loss_rpn_loc: 0.006997    time: 0.8200  last_time: 1.0320  data_time: 0.0199  last_data_time: 0.0304   lr: 0.0025  max_mem: 722M
+[05/25 19:32:24] d2.utils.events INFO:  eta: 0:10:31  iter: 1259  total_loss: 2.366  loss_cls: 0.3475  loss_box_reg: 0.9008  loss_mask: 0.3855  loss_occluder_mask: 0.001631  loss_occludee_boundary: 0.5483  loss_occluder_boundary: 0.0003072  loss_rpn_cls: 0.02124  loss_rpn_loc: 0.009352    time: 0.8203  last_time: 0.7457  data_time: 0.0223  last_data_time: 0.0301   lr: 0.0025  max_mem: 722M
+[05/25 19:32:40] d2.utils.events INFO:  eta: 0:10:18  iter: 1279  total_loss: 3.01  loss_cls: 0.6661  loss_box_reg: 0.8119  loss_mask: 0.3974  loss_occluder_mask: 0.007723  loss_occludee_boundary: 0.542  loss_occluder_boundary: 0.01745  loss_rpn_cls: 0.02234  loss_rpn_loc: 0.01147    time: 0.8207  last_time: 1.1022  data_time: 0.0217  last_data_time: 0.0144   lr: 0.0025  max_mem: 722M
+[05/25 19:32:57] d2.utils.events INFO:  eta: 0:10:00  iter: 1299  total_loss: 2.757  loss_cls: 0.6811  loss_box_reg: 0.8719  loss_mask: 0.4504  loss_occluder_mask: 0.009629  loss_occludee_boundary: 0.557  loss_occluder_boundary: 0.008098  loss_rpn_cls: 0.02056  loss_rpn_loc: 0.009028    time: 0.8208  last_time: 0.7528  data_time: 0.0225  last_data_time: 0.0380   lr: 0.0025  max_mem: 722M
+[05/25 19:33:14] d2.utils.events INFO:  eta: 0:09:44  iter: 1319  total_loss: 2.821  loss_cls: 0.6505  loss_box_reg: 0.8849  loss_mask: 0.3999  loss_occluder_mask: 0.02088  loss_occludee_boundary: 0.5467  loss_occluder_boundary: 0.01511  loss_rpn_cls: 0.02363  loss_rpn_loc: 0.01054    time: 0.8215  last_time: 0.7338  data_time: 0.0229  last_data_time: 0.0159   lr: 0.0025  max_mem: 722M
+[05/25 19:33:32] d2.utils.events INFO:  eta: 0:09:27  iter: 1339  total_loss: 2.324  loss_cls: 0.4794  loss_box_reg: 0.7995  loss_mask: 0.4534  loss_occluder_mask: 0.00216  loss_occludee_boundary: 0.5443  loss_occluder_boundary: 0.0001631  loss_rpn_cls: 0.01863  loss_rpn_loc: 0.009792    time: 0.8223  last_time: 1.1235  data_time: 0.0203  last_data_time: 0.0337   lr: 0.0025  max_mem: 722M
+[05/25 19:33:49] d2.utils.events INFO:  eta: 0:09:09  iter: 1359  total_loss: 2.391  loss_cls: 0.5269  loss_box_reg: 0.9623  loss_mask: 0.428  loss_occluder_mask: 0.004381  loss_occludee_boundary: 0.5652  loss_occluder_boundary: 0.004158  loss_rpn_cls: 0.01348  loss_rpn_loc: 0.006978    time: 0.8231  last_time: 0.8526  data_time: 0.0197  last_data_time: 0.0116   lr: 0.0025  max_mem: 722M
+[05/25 19:34:05] d2.utils.events INFO:  eta: 0:08:52  iter: 1379  total_loss: 2.771  loss_cls: 0.7619  loss_box_reg: 0.891  loss_mask: 0.4855  loss_occluder_mask: 0.005174  loss_occludee_boundary: 0.5851  loss_occluder_boundary: 0.004902  loss_rpn_cls: 0.03188  loss_rpn_loc: 0.0136    time: 0.8225  last_time: 0.9591  data_time: 0.0226  last_data_time: 0.0346   lr: 0.0025  max_mem: 722M
+[05/25 19:34:22] d2.utils.events INFO:  eta: 0:08:36  iter: 1399  total_loss: 2.566  loss_cls: 0.5402  loss_box_reg: 0.7591  loss_mask: 0.4578  loss_occluder_mask: 0.01155  loss_occludee_boundary: 0.5819  loss_occluder_boundary: 0.008571  loss_rpn_cls: 0.01719  loss_rpn_loc: 0.008226    time: 0.8232  last_time: 0.6297  data_time: 0.0244  last_data_time: 0.0188   lr: 0.0025  max_mem: 722M
+[05/25 19:34:39] d2.utils.events INFO:  eta: 0:08:18  iter: 1419  total_loss: 2.636  loss_cls: 0.4825  loss_box_reg: 0.9351  loss_mask: 0.4415  loss_occluder_mask: 0.003977  loss_occludee_boundary: 0.5665  loss_occluder_boundary: 0.0006675  loss_rpn_cls: 0.02088  loss_rpn_loc: 0.007641    time: 0.8229  last_time: 1.0296  data_time: 0.0214  last_data_time: 0.0149   lr: 0.0025  max_mem: 722M
+[05/25 19:34:56] d2.utils.events INFO:  eta: 0:08:01  iter: 1439  total_loss: 2.597  loss_cls: 0.6219  loss_box_reg: 0.8578  loss_mask: 0.4104  loss_occluder_mask: 0.004123  loss_occludee_boundary: 0.5565  loss_occluder_boundary: 0.0009094  loss_rpn_cls: 0.01449  loss_rpn_loc: 0.01037    time: 0.8237  last_time: 0.7446  data_time: 0.0210  last_data_time: 0.0286   lr: 0.0025  max_mem: 722M
+[05/25 19:35:13] d2.utils.events INFO:  eta: 0:07:43  iter: 1459  total_loss: 2.507  loss_cls: 0.6643  loss_box_reg: 0.6203  loss_mask: 0.4664  loss_occluder_mask: 0.003642  loss_occludee_boundary: 0.5831  loss_occluder_boundary: 0.001391  loss_rpn_cls: 0.02084  loss_rpn_loc: 0.0156    time: 0.8237  last_time: 0.8338  data_time: 0.0225  last_data_time: 0.0165   lr: 0.0025  max_mem: 722M
+[05/25 19:35:30] d2.utils.events INFO:  eta: 0:07:27  iter: 1479  total_loss: 2.389  loss_cls: 0.4113  loss_box_reg: 0.7884  loss_mask: 0.4772  loss_occluder_mask: 0.01002  loss_occludee_boundary: 0.5726  loss_occluder_boundary: 0.004457  loss_rpn_cls: 0.01684  loss_rpn_loc: 0.01135    time: 0.8240  last_time: 1.0142  data_time: 0.0248  last_data_time: 0.0184   lr: 0.0025  max_mem: 722M
+[05/25 19:35:46] d2.data.datasets.coco INFO: Loaded 100 images in COCO format from D:\00workshop\pythonProjects\BCNet\data\cocoa-cls\annotations\cocoa_mini_visible_eval.json
+[05/25 19:35:46] d2.data.dataset_mapper INFO: [DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(500, 500), max_size=800, sample_style='choice')]
+[05/25 19:35:46] d2.data.common INFO: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[05/25 19:35:46] d2.data.common INFO: Serializing 100 elements to byte tensors and concatenating them all ...
+[05/25 19:35:46] d2.data.common INFO: Serialized dataset takes 0.14 MiB
+[05/25 19:35:46] d2.evaluation.evaluator INFO: Start inference on 100 batches
+[05/25 19:35:48] d2.evaluation.evaluator INFO: Inference done 11/100. Dataloading: 0.0115 s/iter. Inference: 0.1153 s/iter. Eval: 0.0215 s/iter. Total: 0.1483 s/iter. ETA=0:00:13
+[05/25 19:35:53] d2.evaluation.evaluator INFO: Inference done 44/100. Dataloading: 0.0137 s/iter. Inference: 0.1170 s/iter. Eval: 0.0229 s/iter. Total: 0.1536 s/iter. ETA=0:00:08
+[05/25 19:35:58] d2.evaluation.evaluator INFO: Inference done 75/100. Dataloading: 0.0144 s/iter. Inference: 0.1189 s/iter. Eval: 0.0251 s/iter. Total: 0.1584 s/iter. ETA=0:00:03
+[05/25 19:36:02] d2.evaluation.evaluator INFO: Total inference time: 0:00:15.167988 (0.159663 s / iter per device, on 1 devices)
+[05/25 19:36:02] d2.evaluation.evaluator INFO: Total inference pure compute time: 0:00:11 (0.119901 s / iter per device, on 1 devices)
+[05/25 19:36:02] d2.evaluation.coco_evaluation INFO: Preparing results for COCO format ...
+[05/25 19:36:02] d2.evaluation.coco_evaluation INFO: Saving results to output\run2k_boundary\eval\cocoa_mini_visible_eval\coco_instances_results.json
+[05/25 19:36:02] d2.evaluation.coco_evaluation INFO: Evaluating predictions with unofficial COCO API...
+[05/25 19:36:02] d2.evaluation.fast_eval_api INFO: Evaluate annotation type *bbox*
+[05/25 19:36:02] d2.evaluation.fast_eval_api INFO: COCOeval_opt.evaluate() finished in 0.06 seconds.
+[05/25 19:36:02] d2.evaluation.fast_eval_api INFO: Accumulating evaluation results...
+[05/25 19:36:02] d2.evaluation.fast_eval_api INFO: COCOeval_opt.accumulate() finished in 0.13 seconds.
+[05/25 19:36:02] d2.evaluation.coco_evaluation INFO: Evaluation results for bbox: 
+|   AP   |  AP50  |  AP75  |  APs  |  APm   |  APl   |
+|:------:|:------:|:------:|:-----:|:------:|:------:|
+| 11.015 | 30.843 | 1.971  | 3.157 | 10.584 | 14.340 |
+[05/25 19:36:02] d2.evaluation.coco_evaluation INFO: Per-category bbox AP: 
+| category      | AP     | category     | AP     | category       | AP     |
+|:--------------|:-------|:-------------|:-------|:---------------|:-------|
+| person        | 6.259  | bicycle      | 0.000  | car            | 1.950  |
+| motorcycle    | nan    | airplane     | nan    | bus            | 0.000  |
+| train         | 0.000  | truck        | 0.000  | boat           | 3.834  |
+| traffic light | nan    | fire hydrant | nan    | stop sign      | nan    |
+| parking meter | nan    | bench        | 10.099 | bird           | nan    |
+| cat           | nan    | dog          | nan    | horse          | nan    |
+| sheep         | 10.099 | cow          | nan    | elephant       | nan    |
+| bear          | 35.000 | zebra        | 0.960  | giraffe        | nan    |
+| backpack      | nan    | umbrella     | 11.436 | handbag        | 8.977  |
+| tie           | nan    | suitcase     | 2.640  | frisbee        | 0.000  |
+| skis          | nan    | snowboard    | nan    | sports ball    | nan    |
+| kite          | nan    | baseball bat | 0.000  | baseball glove | nan    |
+| skateboard    | 3.284  | surfboard    | nan    | tennis racket  | 0.000  |
+| bottle        | 24.901 | wine glass   | nan    | cup            | 0.604  |
+| fork          | nan    | knife        | 9.208  | spoon          | nan    |
+| bowl          | 0.000  | banana       | 8.000  | apple          | 30.000 |
+| sandwich      | 11.370 | orange       | nan    | broccoli       | 2.772  |
+| carrot        | nan    | hot dog      | 50.000 | pizza          | nan    |
+| donut         | 0.000  | cake         | nan    | chair          | 2.288  |
+| couch         | 50.000 | potted plant | nan    | bed            | nan    |
+| dining table  | 21.389 | toilet       | 23.333 | tv             | 25.248 |
+| laptop        | nan    | mouse        | 0.000  | remote         | 2.115  |
+| keyboard      | 0.000  | cell phone   | 3.366  | microwave      | 6.138  |
+| oven          | 25.000 | toaster      | nan    | sink           | nan    |
+| refrigerator  | nan    | book         | 0.000  | clock          | nan    |
+| vase          | 40.000 | scissors     | 40.000 | teddy bear     | 3.379  |
+| hair drier    | nan    | toothbrush   | nan    |                |        |
+[05/25 19:36:02] d2.evaluation.fast_eval_api INFO: Evaluate annotation type *segm*
+[05/25 19:36:02] d2.evaluation.fast_eval_api INFO: COCOeval_opt.evaluate() finished in 0.06 seconds.
+[05/25 19:36:02] d2.evaluation.fast_eval_api INFO: Accumulating evaluation results...
+[05/25 19:36:03] d2.evaluation.fast_eval_api INFO: COCOeval_opt.accumulate() finished in 0.11 seconds.
+[05/25 19:36:03] d2.evaluation.coco_evaluation INFO: Evaluation results for segm: 
+|  AP   |  AP50  |  AP75  |  APs  |  APm  |  APl  |
+|:-----:|:------:|:------:|:-----:|:-----:|:-----:|
+| 1.601 | 6.685  | 0.000  | 0.000 | 0.698 | 5.236 |
+[05/25 19:36:03] d2.evaluation.coco_evaluation INFO: Per-category segm AP: 
+| category      | AP     | category     | AP    | category       | AP     |
+|:--------------|:-------|:-------------|:------|:---------------|:-------|
+| person        | 0.555  | bicycle      | 0.000 | car            | 0.154  |
+| motorcycle    | nan    | airplane     | nan   | bus            | 0.000  |
+| train         | 0.000  | truck        | 0.000 | boat           | 0.000  |
+| traffic light | nan    | fire hydrant | nan   | stop sign      | nan    |
+| parking meter | nan    | bench        | 0.000 | bird           | nan    |
+| cat           | nan    | dog          | nan   | horse          | nan    |
+| sheep         | 2.525  | cow          | nan   | elephant       | nan    |
+| bear          | 5.000  | zebra        | 0.000 | giraffe        | nan    |
+| backpack      | nan    | umbrella     | 0.000 | handbag        | 0.000  |
+| tie           | nan    | suitcase     | 0.000 | frisbee        | 0.000  |
+| skis          | nan    | snowboard    | nan   | sports ball    | nan    |
+| kite          | nan    | baseball bat | 0.000 | baseball glove | nan    |
+| skateboard    | 0.000  | surfboard    | nan   | tennis racket  | 0.000  |
+| bottle        | 0.000  | wine glass   | nan   | cup            | 0.000  |
+| fork          | nan    | knife        | 0.000 | spoon          | nan    |
+| bowl          | 0.000  | banana       | 0.000 | apple          | 0.000  |
+| sandwich      | 0.160  | orange       | nan   | broccoli       | 0.000  |
+| carrot        | nan    | hot dog      | 0.000 | pizza          | nan    |
+| donut         | 0.000  | cake         | nan   | chair          | 0.000  |
+| couch         | 0.000  | potted plant | nan   | bed            | nan    |
+| dining table  | 0.000  | toilet       | 0.000 | tv             | 0.000  |
+| laptop        | nan    | mouse        | 0.000 | remote         | 1.683  |
+| keyboard      | 0.000  | cell phone   | 0.000 | microwave      | 5.315  |
+| oven          | 0.000  | toaster      | nan   | sink           | nan    |
+| refrigerator  | nan    | book         | 0.000 | clock          | nan    |
+| vase          | 43.333 | scissors     | 0.000 | teddy bear     | 10.099 |
+| hair drier    | nan    | toothbrush   | nan   |                |        |
+[05/25 19:36:03] d2.engine.defaults INFO: Evaluation results for cocoa_mini_visible_eval in csv format:
+[05/25 19:36:03] d2.evaluation.testing INFO: copypaste: Task: bbox
+[05/25 19:36:03] d2.evaluation.testing INFO: copypaste: AP,AP50,AP75,APs,APm,APl
+[05/25 19:36:03] d2.evaluation.testing INFO: copypaste: 11.0151,30.8429,1.9709,3.1567,10.5836,14.3404
+[05/25 19:36:03] d2.evaluation.testing INFO: copypaste: Task: segm
+[05/25 19:36:03] d2.evaluation.testing INFO: copypaste: AP,AP50,AP75,APs,APm,APl
+[05/25 19:36:03] d2.evaluation.testing INFO: copypaste: 1.6006,6.6848,0.0000,0.0000,0.6976,5.2358
+[05/25 19:36:03] d2.utils.events INFO:  eta: 0:07:10  iter: 1499  total_loss: 2.704  loss_cls: 0.5935  loss_box_reg: 0.8514  loss_mask: 0.4681  loss_occluder_mask: 0.00576  loss_occludee_boundary: 0.5604  loss_occluder_boundary: 0.002994  loss_rpn_cls: 0.01558  loss_rpn_loc: 0.00964    time: 0.8241  last_time: 1.0586  data_time: 0.0205  last_data_time: 0.0156   lr: 0.0025  max_mem: 880M
+[05/25 19:36:19] d2.utils.events INFO:  eta: 0:06:52  iter: 1519  total_loss: 2.561  loss_cls: 0.5366  loss_box_reg: 0.8721  loss_mask: 0.4333  loss_occluder_mask: 0.009722  loss_occludee_boundary: 0.5731  loss_occluder_boundary: 0.01068  loss_rpn_cls: 0.01642  loss_rpn_loc: 0.01031    time: 0.8242  last_time: 0.8191  data_time: 0.0242  last_data_time: 0.0197   lr: 0.00025  max_mem: 880M
+[05/25 19:36:36] d2.utils.events INFO:  eta: 0:06:35  iter: 1539  total_loss: 2.29  loss_cls: 0.4056  loss_box_reg: 0.8854  loss_mask: 0.3967  loss_occluder_mask: 0.007445  loss_occludee_boundary: 0.5246  loss_occluder_boundary: 0.008748  loss_rpn_cls: 0.0166  loss_rpn_loc: 0.006979    time: 0.8241  last_time: 0.8645  data_time: 0.0205  last_data_time: 0.0132   lr: 0.00025  max_mem: 880M
+[05/25 19:36:52] d2.utils.events INFO:  eta: 0:06:18  iter: 1559  total_loss: 2.266  loss_cls: 0.3858  loss_box_reg: 0.8004  loss_mask: 0.4512  loss_occluder_mask: 0.00504  loss_occludee_boundary: 0.5598  loss_occluder_boundary: 0.006951  loss_rpn_cls: 0.01759  loss_rpn_loc: 0.009203    time: 0.8242  last_time: 0.6102  data_time: 0.0215  last_data_time: 0.0219   lr: 0.00025  max_mem: 880M
+[05/25 19:37:11] d2.utils.events INFO:  eta: 0:06:01  iter: 1579  total_loss: 2.529  loss_cls: 0.5953  loss_box_reg: 0.8523  loss_mask: 0.4112  loss_occluder_mask: 0.005164  loss_occludee_boundary: 0.5435  loss_occluder_boundary: 0.003084  loss_rpn_cls: 0.01614  loss_rpn_loc: 0.00879    time: 0.8253  last_time: 1.0373  data_time: 0.0227  last_data_time: 0.0217   lr: 0.00025  max_mem: 880M
+[05/25 19:37:27] d2.utils.events INFO:  eta: 0:05:44  iter: 1599  total_loss: 2.25  loss_cls: 0.4682  loss_box_reg: 0.7724  loss_mask: 0.3567  loss_occluder_mask: 0.001824  loss_occludee_boundary: 0.5198  loss_occluder_boundary: 0.000521  loss_rpn_cls: 0.01581  loss_rpn_loc: 0.004896    time: 0.8253  last_time: 0.7629  data_time: 0.0212  last_data_time: 0.0219   lr: 0.00025  max_mem: 880M
+[05/25 19:37:45] d2.utils.events INFO:  eta: 0:05:27  iter: 1619  total_loss: 2.292  loss_cls: 0.4107  loss_box_reg: 0.8341  loss_mask: 0.353  loss_occluder_mask: 0.00581  loss_occludee_boundary: 0.5366  loss_occluder_boundary: 0.003565  loss_rpn_cls: 0.01748  loss_rpn_loc: 0.01058    time: 0.8262  last_time: 1.0262  data_time: 0.0241  last_data_time: 0.0315   lr: 0.00025  max_mem: 880M
+[05/25 19:38:02] d2.utils.events INFO:  eta: 0:05:11  iter: 1639  total_loss: 2.128  loss_cls: 0.5448  loss_box_reg: 0.6634  loss_mask: 0.3683  loss_occluder_mask: 0.001845  loss_occludee_boundary: 0.5229  loss_occluder_boundary: 0.0006674  loss_rpn_cls: 0.01158  loss_rpn_loc: 0.007802    time: 0.8262  last_time: 0.9489  data_time: 0.0205  last_data_time: 0.0237   lr: 0.00025  max_mem: 880M
+[05/25 19:38:18] d2.utils.events INFO:  eta: 0:04:54  iter: 1659  total_loss: 2.066  loss_cls: 0.2886  loss_box_reg: 0.691  loss_mask: 0.407  loss_occluder_mask: 0.00188  loss_occludee_boundary: 0.5294  loss_occluder_boundary: 0.0008396  loss_rpn_cls: 0.01418  loss_rpn_loc: 0.008995    time: 0.8261  last_time: 1.0553  data_time: 0.0200  last_data_time: 0.0154   lr: 0.00025  max_mem: 880M
+[05/25 19:38:36] d2.utils.events INFO:  eta: 0:04:37  iter: 1679  total_loss: 2.064  loss_cls: 0.3323  loss_box_reg: 0.8414  loss_mask: 0.3629  loss_occluder_mask: 0.002949  loss_occludee_boundary: 0.5284  loss_occluder_boundary: 0.001524  loss_rpn_cls: 0.01306  loss_rpn_loc: 0.008258    time: 0.8268  last_time: 0.8447  data_time: 0.0224  last_data_time: 0.0181   lr: 0.00025  max_mem: 880M
+[05/25 19:38:53] d2.utils.events INFO:  eta: 0:04:19  iter: 1699  total_loss: 2.14  loss_cls: 0.4275  loss_box_reg: 0.7979  loss_mask: 0.3501  loss_occluder_mask: 0.003146  loss_occludee_boundary: 0.5272  loss_occluder_boundary: 0.001005  loss_rpn_cls: 0.01247  loss_rpn_loc: 0.009541    time: 0.8271  last_time: 0.5118  data_time: 0.0246  last_data_time: 0.0295   lr: 0.00025  max_mem: 880M
+[05/25 19:39:09] d2.utils.events INFO:  eta: 0:04:02  iter: 1719  total_loss: 2.036  loss_cls: 0.2602  loss_box_reg: 0.7062  loss_mask: 0.3902  loss_occluder_mask: 0.005415  loss_occludee_boundary: 0.5316  loss_occluder_boundary: 0.002433  loss_rpn_cls: 0.01261  loss_rpn_loc: 0.008384    time: 0.8271  last_time: 0.7947  data_time: 0.0226  last_data_time: 0.0188   lr: 0.00025  max_mem: 880M
+[05/25 19:39:25] d2.utils.events INFO:  eta: 0:03:45  iter: 1739  total_loss: 1.939  loss_cls: 0.2518  loss_box_reg: 0.714  loss_mask: 0.3562  loss_occluder_mask: 0.001963  loss_occludee_boundary: 0.5246  loss_occluder_boundary: 0.0007295  loss_rpn_cls: 0.01601  loss_rpn_loc: 0.009787    time: 0.8269  last_time: 0.7282  data_time: 0.0209  last_data_time: 0.0123   lr: 0.00025  max_mem: 880M
+[05/25 19:39:43] d2.utils.events INFO:  eta: 0:03:27  iter: 1759  total_loss: 2.038  loss_cls: 0.331  loss_box_reg: 0.8111  loss_mask: 0.3321  loss_occluder_mask: 0.002456  loss_occludee_boundary: 0.5199  loss_occluder_boundary: 0.0007446  loss_rpn_cls: 0.01297  loss_rpn_loc: 0.00602    time: 0.8275  last_time: 0.8981  data_time: 0.0234  last_data_time: 0.0420   lr: 0.00025  max_mem: 880M
+[05/25 19:40:00] d2.utils.events INFO:  eta: 0:03:10  iter: 1779  total_loss: 1.874  loss_cls: 0.4189  loss_box_reg: 0.692  loss_mask: 0.341  loss_occluder_mask: 0.004119  loss_occludee_boundary: 0.5163  loss_occluder_boundary: 0.001952  loss_rpn_cls: 0.01977  loss_rpn_loc: 0.005485    time: 0.8277  last_time: 1.0915  data_time: 0.0232  last_data_time: 0.0278   lr: 0.00025  max_mem: 880M
+[05/25 19:40:16] d2.utils.events INFO:  eta: 0:02:53  iter: 1799  total_loss: 1.916  loss_cls: 0.2588  loss_box_reg: 0.6718  loss_mask: 0.3749  loss_occluder_mask: 0.001705  loss_occludee_boundary: 0.5325  loss_occluder_boundary: 0.0003357  loss_rpn_cls: 0.01731  loss_rpn_loc: 0.00889    time: 0.8272  last_time: 0.5288  data_time: 0.0205  last_data_time: 0.0220   lr: 0.00025  max_mem: 880M
+[05/25 19:40:33] d2.utils.events INFO:  eta: 0:02:36  iter: 1819  total_loss: 1.729  loss_cls: 0.1753  loss_box_reg: 0.635  loss_mask: 0.3837  loss_occluder_mask: 0.004181  loss_occludee_boundary: 0.5149  loss_occluder_boundary: 0.003344  loss_rpn_cls: 0.0153  loss_rpn_loc: 0.007968    time: 0.8277  last_time: 0.8594  data_time: 0.0208  last_data_time: 0.0138   lr: 2.5e-05  max_mem: 880M
+[05/25 19:40:50] d2.utils.events INFO:  eta: 0:02:18  iter: 1839  total_loss: 1.946  loss_cls: 0.2931  loss_box_reg: 0.7505  loss_mask: 0.3226  loss_occluder_mask: 0.002664  loss_occludee_boundary: 0.4871  loss_occluder_boundary: 0.001731  loss_rpn_cls: 0.008364  loss_rpn_loc: 0.009237    time: 0.8280  last_time: 1.0763  data_time: 0.0226  last_data_time: 0.0213   lr: 2.5e-05  max_mem: 880M
+[05/25 19:41:06] d2.utils.events INFO:  eta: 0:02:01  iter: 1859  total_loss: 1.791  loss_cls: 0.2696  loss_box_reg: 0.6974  loss_mask: 0.3361  loss_occluder_mask: 0.003622  loss_occludee_boundary: 0.5053  loss_occluder_boundary: 0.001384  loss_rpn_cls: 0.01545  loss_rpn_loc: 0.006079    time: 0.8278  last_time: 0.6966  data_time: 0.0219  last_data_time: 0.0152   lr: 2.5e-05  max_mem: 880M
+[05/25 19:41:24] d2.utils.events INFO:  eta: 0:01:43  iter: 1879  total_loss: 1.982  loss_cls: 0.3115  loss_box_reg: 0.7028  loss_mask: 0.3654  loss_occluder_mask: 0.002338  loss_occludee_boundary: 0.5271  loss_occluder_boundary: 0.001404  loss_rpn_cls: 0.01205  loss_rpn_loc: 0.009642    time: 0.8283  last_time: 1.0270  data_time: 0.0231  last_data_time: 0.0315   lr: 2.5e-05  max_mem: 880M
+[05/25 19:41:40] d2.utils.events INFO:  eta: 0:01:26  iter: 1899  total_loss: 2.025  loss_cls: 0.3083  loss_box_reg: 0.7153  loss_mask: 0.3846  loss_occluder_mask: 0.002465  loss_occludee_boundary: 0.5343  loss_occluder_boundary: 0.001373  loss_rpn_cls: 0.01773  loss_rpn_loc: 0.008999    time: 0.8280  last_time: 0.8646  data_time: 0.0216  last_data_time: 0.0167   lr: 2.5e-05  max_mem: 880M
+[05/25 19:41:58] d2.utils.events INFO:  eta: 0:01:09  iter: 1919  total_loss: 1.888  loss_cls: 0.2577  loss_box_reg: 0.7343  loss_mask: 0.3516  loss_occluder_mask: 0.005143  loss_occludee_boundary: 0.5196  loss_occluder_boundary: 0.002423  loss_rpn_cls: 0.01424  loss_rpn_loc: 0.008411    time: 0.8286  last_time: 0.7294  data_time: 0.0225  last_data_time: 0.0212   lr: 2.5e-05  max_mem: 880M
+[05/25 19:42:13] d2.utils.events INFO:  eta: 0:00:51  iter: 1939  total_loss: 2.028  loss_cls: 0.2615  loss_box_reg: 0.6756  loss_mask: 0.4066  loss_occluder_mask: 0.003141  loss_occludee_boundary: 0.5606  loss_occluder_boundary: 0.001519  loss_rpn_cls: 0.01676  loss_rpn_loc: 0.008836    time: 0.8282  last_time: 0.9626  data_time: 0.0229  last_data_time: 0.0213   lr: 2.5e-05  max_mem: 880M
+[05/25 19:42:31] d2.utils.events INFO:  eta: 0:00:34  iter: 1959  total_loss: 1.781  loss_cls: 0.1934  loss_box_reg: 0.6684  loss_mask: 0.3552  loss_occluder_mask: 0.003719  loss_occludee_boundary: 0.5103  loss_occluder_boundary: 0.001295  loss_rpn_cls: 0.01384  loss_rpn_loc: 0.008715    time: 0.8288  last_time: 1.0303  data_time: 0.0226  last_data_time: 0.0145   lr: 2.5e-05  max_mem: 880M
+[05/25 19:42:48] d2.utils.events INFO:  eta: 0:00:17  iter: 1979  total_loss: 1.717  loss_cls: 0.2463  loss_box_reg: 0.7098  loss_mask: 0.2918  loss_occluder_mask: 0.00234  loss_occludee_boundary: 0.4746  loss_occluder_boundary: 0.001543  loss_rpn_cls: 0.01217  loss_rpn_loc: 0.007007    time: 0.8289  last_time: 0.7301  data_time: 0.0202  last_data_time: 0.0149   lr: 2.5e-05  max_mem: 880M
+[05/25 19:43:05] fvcore.common.checkpoint INFO: Saving checkpoint to ./output/run2k_boundary\model_0001999.pth
+[05/25 19:43:05] fvcore.common.checkpoint INFO: Saving checkpoint to ./output/run2k_boundary\model_final.pth
+[05/25 19:43:06] d2.utils.events INFO:  eta: 0:00:00  iter: 1999  total_loss: 1.917  loss_cls: 0.2948  loss_box_reg: 0.703  loss_mask: 0.3825  loss_occluder_mask: 0.003303  loss_occludee_boundary: 0.5212  loss_occluder_boundary: 0.001415  loss_rpn_cls: 0.009437  loss_rpn_loc: 0.00889    time: 0.8292  last_time: 0.9507  data_time: 0.0221  last_data_time: 0.0179   lr: 2.5e-05  max_mem: 880M
+[05/25 19:43:06] d2.engine.hooks INFO: Overall training speed: 1998 iterations in 0:27:36 (0.8292 s / it)
+[05/25 19:43:06] d2.engine.hooks INFO: Total training time: 0:28:22 (0:00:45 on hooks)
+[05/25 19:43:06] d2.data.datasets.coco INFO: Loaded 100 images in COCO format from D:\00workshop\pythonProjects\BCNet\data\cocoa-cls\annotations\cocoa_mini_visible_eval.json
+[05/25 19:43:06] d2.data.dataset_mapper INFO: [DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(500, 500), max_size=800, sample_style='choice')]
+[05/25 19:43:06] d2.data.common INFO: Serializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[05/25 19:43:06] d2.data.common INFO: Serializing 100 elements to byte tensors and concatenating them all ...
+[05/25 19:43:06] d2.data.common INFO: Serialized dataset takes 0.14 MiB
+[05/25 19:43:06] d2.evaluation.evaluator INFO: Start inference on 100 batches
+[05/25 19:43:07] d2.evaluation.evaluator INFO: Inference done 11/100. Dataloading: 0.0144 s/iter. Inference: 0.0911 s/iter. Eval: 0.0102 s/iter. Total: 0.1157 s/iter. ETA=0:00:10
+[05/25 19:43:12] d2.evaluation.evaluator INFO: Inference done 53/100. Dataloading: 0.0153 s/iter. Inference: 0.0933 s/iter. Eval: 0.0105 s/iter. Total: 0.1191 s/iter. ETA=0:00:05
+[05/25 19:43:17] d2.evaluation.evaluator INFO: Inference done 93/100. Dataloading: 0.0162 s/iter. Inference: 0.0948 s/iter. Eval: 0.0112 s/iter. Total: 0.1222 s/iter. ETA=0:00:00
+[05/25 19:43:18] d2.evaluation.evaluator INFO: Total inference time: 0:00:11.784594 (0.124048 s / iter per device, on 1 devices)
+[05/25 19:43:18] d2.evaluation.evaluator INFO: Total inference pure compute time: 0:00:09 (0.096309 s / iter per device, on 1 devices)
+[05/25 19:43:18] d2.evaluation.coco_evaluation INFO: Preparing results for COCO format ...
+[05/25 19:43:18] d2.evaluation.coco_evaluation INFO: Saving results to output\run2k_boundary\eval\cocoa_mini_visible_eval\coco_instances_results.json
+[05/25 19:43:18] d2.evaluation.coco_evaluation INFO: Evaluating predictions with unofficial COCO API...
+[05/25 19:43:18] d2.evaluation.fast_eval_api INFO: Evaluate annotation type *bbox*
+[05/25 19:43:18] d2.evaluation.fast_eval_api INFO: COCOeval_opt.evaluate() finished in 0.05 seconds.
+[05/25 19:43:18] d2.evaluation.fast_eval_api INFO: Accumulating evaluation results...
+[05/25 19:43:18] d2.evaluation.fast_eval_api INFO: COCOeval_opt.accumulate() finished in 0.13 seconds.
+[05/25 19:43:18] d2.evaluation.coco_evaluation INFO: Evaluation results for bbox: 
+|   AP   |  AP50  |  AP75  |  APs  |  APm   |  APl   |
+|:------:|:------:|:------:|:-----:|:------:|:------:|
+| 19.414 | 52.578 | 12.536 | 9.616 | 20.444 | 26.919 |
+[05/25 19:43:18] d2.evaluation.coco_evaluation INFO: Per-category bbox AP: 
+| category      | AP     | category     | AP     | category       | AP     |
+|:--------------|:-------|:-------------|:-------|:---------------|:-------|
+| person        | 13.235 | bicycle      | 0.337  | car            | 4.787  |
+| motorcycle    | nan    | airplane     | nan    | bus            | 1.188  |
+| train         | 3.333  | truck        | 0.000  | boat           | 32.584 |
+| traffic light | nan    | fire hydrant | nan    | stop sign      | nan    |
+| parking meter | nan    | bench        | 35.347 | bird           | nan    |
+| cat           | nan    | dog          | nan    | horse          | nan    |
+| sheep         | 27.448 | cow          | nan    | elephant       | nan    |
+| bear          | 30.000 | zebra        | 4.535  | giraffe        | nan    |
+| backpack      | nan    | umbrella     | 22.677 | handbag        | 5.545  |
+| tie           | nan    | suitcase     | 0.000  | frisbee        | 0.000  |
+| skis          | nan    | snowboard    | nan    | sports ball    | nan    |
+| kite          | nan    | baseball bat | 0.000  | baseball glove | nan    |
+| skateboard    | 40.000 | surfboard    | nan    | tennis racket  | 33.333 |
+| bottle        | 24.079 | wine glass   | nan    | cup            | 27.822 |
+| fork          | nan    | knife        | 2.874  | spoon          | nan    |
+| bowl          | 31.617 | banana       | 30.000 | apple          | 40.000 |
+| sandwich      | 10.594 | orange       | nan    | broccoli       | 15.785 |
+| carrot        | nan    | hot dog      | 90.000 | pizza          | nan    |
+| donut         | 8.945  | cake         | nan    | chair          | 6.169  |
+| couch         | 22.500 | potted plant | nan    | bed            | nan    |
+| dining table  | 34.345 | toilet       | 35.000 | tv             | 42.525 |
+| laptop        | nan    | mouse        | 0.000  | remote         | 6.356  |
+| keyboard      | 0.000  | cell phone   | 11.312 | microwave      | 13.089 |
+| oven          | 60.000 | toaster      | nan    | sink           | nan    |
+| refrigerator  | nan    | book         | 19.670 | clock          | nan    |
+| vase          | 15.000 | scissors     | 22.500 | teddy bear     | 10.292 |
+| hair drier    | nan    | toothbrush   | nan    |                |        |
+[05/25 19:43:18] d2.evaluation.fast_eval_api INFO: Evaluate annotation type *segm*
+[05/25 19:43:18] d2.evaluation.fast_eval_api INFO: COCOeval_opt.evaluate() finished in 0.05 seconds.
+[05/25 19:43:18] d2.evaluation.fast_eval_api INFO: Accumulating evaluation results...
+[05/25 19:43:18] d2.evaluation.fast_eval_api INFO: COCOeval_opt.accumulate() finished in 0.13 seconds.
+[05/25 19:43:18] d2.evaluation.coco_evaluation INFO: Evaluation results for segm: 
+|   AP   |  AP50  |  AP75  |  APs  |  APm   |  APl   |
+|:------:|:------:|:------:|:-----:|:------:|:------:|
+| 11.299 | 36.267 | 4.832  | 2.758 | 11.627 | 19.046 |
+[05/25 19:43:18] d2.evaluation.coco_evaluation INFO: Per-category segm AP: 
+| category      | AP     | category     | AP     | category       | AP     |
+|:--------------|:-------|:-------------|:-------|:---------------|:-------|
+| person        | 7.983  | bicycle      | 3.858  | car            | 6.410  |
+| motorcycle    | nan    | airplane     | nan    | bus            | 0.594  |
+| train         | 2.000  | truck        | 0.000  | boat           | 18.416 |
+| traffic light | nan    | fire hydrant | nan    | stop sign      | nan    |
+| parking meter | nan    | bench        | 10.099 | bird           | nan    |
+| cat           | nan    | dog          | nan    | horse          | nan    |
+| sheep         | 34.477 | cow          | nan    | elephant       | nan    |
+| bear          | 10.000 | zebra        | 0.000  | giraffe        | nan    |
+| backpack      | nan    | umbrella     | 7.785  | handbag        | 4.208  |
+| tie           | nan    | suitcase     | 1.744  | frisbee        | 0.000  |
+| skis          | nan    | snowboard    | nan    | sports ball    | nan    |
+| kite          | nan    | baseball bat | 0.000  | baseball glove | nan    |
+| skateboard    | 0.000  | surfboard    | nan    | tennis racket  | 2.500  |
+| bottle        | 10.802 | wine glass   | nan    | cup            | 11.175 |
+| fork          | nan    | knife        | 0.000  | spoon          | nan    |
+| bowl          | 0.337  | banana       | 0.000  | apple          | 15.000 |
+| sandwich      | 18.833 | orange       | nan    | broccoli       | 0.000  |
+| carrot        | nan    | hot dog      | 40.000 | pizza          | nan    |
+| donut         | 2.040  | cake         | nan    | chair          | 0.921  |
+| couch         | 20.000 | potted plant | nan    | bed            | nan    |
+| dining table  | 0.000  | toilet       | 30.000 | tv             | 12.525 |
+| laptop        | nan    | mouse        | 0.000  | remote         | 8.934  |
+| keyboard      | 0.000  | cell phone   | 13.967 | microwave      | 25.868 |
+| oven          | 40.000 | toaster      | nan    | sink           | nan    |
+| refrigerator  | nan    | book         | 17.096 | clock          | nan    |
+| vase          | 56.667 | scissors     | 0.000  | teddy bear     | 51.617 |
+| hair drier    | nan    | toothbrush   | nan    |                |        |
+[05/25 19:43:18] d2.engine.defaults INFO: Evaluation results for cocoa_mini_visible_eval in csv format:
+[05/25 19:43:18] d2.evaluation.testing INFO: copypaste: Task: bbox
+[05/25 19:43:18] d2.evaluation.testing INFO: copypaste: AP,AP50,AP75,APs,APm,APl
+[05/25 19:43:18] d2.evaluation.testing INFO: copypaste: 19.4145,52.5783,12.5358,9.6160,20.4445,26.9192
+[05/25 19:43:18] d2.evaluation.testing INFO: copypaste: Task: segm
+[05/25 19:43:18] d2.evaluation.testing INFO: copypaste: AP,AP50,AP75,APs,APm,APl
+[05/25 19:43:18] d2.evaluation.testing INFO: copypaste: 11.2990,36.2666,4.8317,2.7585,11.6275,19.0458

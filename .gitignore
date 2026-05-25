@@ -1,0 +1,35 @@
+# --- Dataset (do not push raw COCOA images / archives) ---------------------
+data/cocoa-cls/train2014/
+data/cocoa-cls/val2014/
+data/cocoa-cls/train2014.zip
+data/cocoa-cls/val2014.zip
+data/cocoa-cls/annotations/demo/
+
+# --- Training artifacts ----------------------------------------------------
+# output/
+*.pth
+events.out.tfevents.*
+metrics.json
+
+# --- Python --------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# --- IDE / OS --------------------------------------------------------------
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# --- Local secrets / env ---------------------------------------------------
+.env
+.env.local
+
+# --- Claude --------------------------------------------------------------
+.claude/

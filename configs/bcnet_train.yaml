@@ -1,0 +1,128 @@
+# BCNet training config — tuned for a 4 GB VRAM GPU.
+#
+# Inherits Mask R-CNN R-50 FPN defaults from the Detectron2 model zoo via
+# `bcnet.utils.config.setup_bcnet_config()`, so this file only OVERRIDES
+# what differs from the standard recipe.
+#
+# Everything in this file is a knob to retune for your own hardware. 
+# The two sections you'll most often touch are
+# `MODEL.BACKBONE.FREEZE_AT` / `MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE`
+# (VRAM budget) and `SOLVER.MAX_ITER` / `SOLVER.IMS_PER_BATCH` (schedule).
+
+MODEL:
+  # ImageNet-pretrained ResNet-50. Detectron2 downloads this on first run.
+  WEIGHTS: "detectron2://ImageNetPretrained/MSRA/R-50.pkl"
+  MASK_ON: True
+
+  BACKBONE:
+    # ResNet stage freeze level. Lower = more layers train (more VRAM,
+    # better fitting on enough data). On a 4 GB card 5 (freeze the whole
+    # backbone) is the only thing that fits with the head we have.
+    # Try FREEZE_AT: 2 (~6 GB) or FREEZE_AT: 0 (~10 GB) on larger GPUs.
+    FREEZE_AT: 5
+
+  ROI_HEADS:
+    NUM_CLASSES: 80
+    # Proposals sampled per image for ROI head losses. Detectron2 default
+    # is 512; we drop to 64 to fit 4 GB. Bump to 128 / 256 if you have it.
+    BATCH_SIZE_PER_IMAGE: 64
+    # SCORE_THRESH_TEST: kept low (0.05) while overfitting on a tiny set
+    # so visualizers still see *something*. Bump to 0.5 for final eval /
+    # production inference.
+    SCORE_THRESH_TEST: 0.05
+
+  ROI_MASK_HEAD:
+    # Registered by `bcnet.models.bilayer_head` — picks up our BCNet head.
+    NAME: "BCNetBilayerMaskHead"
+    # 1-channel occludee head (class-agnostic). On small data this gives
+    # ~80x more gradient signal per instance than per-class. Set to False
+    # to revert to the per-class head (slower convergence, but matches the
+    # original Mask R-CNN convention).
+    CLS_AGNOSTIC_MASK: True
+    CONV_DIM: 256
+    NUM_CONV: 4
+
+  RPN:
+    # Defaults 2000/1000 (train) and 1000/1000 (test) are heavy for 4 GB.
+    # Bump back up if you have memory to spare — RPN proposals are cheap
+    # to score but expensive to keep around as activations.
+    PRE_NMS_TOPK_TRAIN: 1000
+    POST_NMS_TOPK_TRAIN: 500
+    PRE_NMS_TOPK_TEST: 500
+    POST_NMS_TOPK_TEST: 250
+
+# ---------------------------------------------------------------------------
+# Input sizing — shorter images = fewer activations per step.
+# Stock Mask R-CNN uses MIN_SIZE_TRAIN (640,672,...,800), MAX 1333. We
+# shrink both to keep peak memory in budget.
+# ---------------------------------------------------------------------------
+INPUT:
+  MIN_SIZE_TRAIN: (400, 500, 600)
+  MAX_SIZE_TRAIN: 800
+  MIN_SIZE_TEST: 500
+  MAX_SIZE_TEST: 800
+  # COCOA masks ship as RLE; the BCNet head consumes BitMasks, so we force
+  # the bitmask path through `annotations_to_instances`.
+  MASK_FORMAT: "bitmask"
+
+DATALOADER:
+  # Windows + Detectron2's spawn semantics deadlock with workers > 0. Keep
+  # at 0 unless you've verified your Linux env handles forked loaders.
+  NUM_WORKERS: 0
+
+# ---------------------------------------------------------------------------
+# Solver / schedule. Linear scaling rule: BASE_LR = 0.02 * (IMS_PER_BATCH/16).
+# We use batch=1 (the 4 GB ceiling), so BASE_LR = 0.02 * 1/16 = 0.00125; we
+# round up to 0.0025 since warmup + a frozen backbone tolerates more LR.
+# ---------------------------------------------------------------------------
+SOLVER:
+  IMS_PER_BATCH: 1
+  BASE_LR: 0.0025
+  MAX_ITER: 1000           # short probe schedule. Real runs: 30k+ on 80k images.
+  STEPS: (700, 900)        # LR decay steps; keep at ~0.7 / 0.9 of MAX_ITER.
+  WARMUP_ITERS: 100
+  CHECKPOINT_PERIOD: 500
+  AMP:
+    ENABLED: True          # mixed precision is essential on 4 GB.
+
+TEST:
+  EVAL_PERIOD: 0           # 0 = eval only at end-of-training. Bump to e.g. 500
+                           # if you have spare time and want eval curves.
+
+OUTPUT_DIR: "./output/run" # change this for each experiment to avoid overwriting. 
+
+# ---------------------------------------------------------------------------
+# BCNet-specific knobs (defined in bcnet/utils/config.py).
+# ---------------------------------------------------------------------------
+BCNET:
+  # ---- Dataset paths (relative to repo root) --------------------------------
+  # Edit these if you put COCOA somewhere else, or want a different split.
+  DATA_ROOT: "data/cocoa-cls"
+  TRAIN_JSON: "data/cocoa-cls/annotations/cocoa_mini_test_with_occluder.json"
+  TRAIN_IMG_DIR: "data/cocoa-cls/val2014"
+  VAL_JSON: "data/cocoa-cls/annotations/cocoa_mini_test_with_occluder.json"
+  VAL_IMG_DIR: "data/cocoa-cls/val2014"
+  VISIBLE_EVAL_JSON: "data/cocoa-cls/annotations/cocoa_mini_visible_eval.json"
+  VISIBLE_EVAL_IMG_DIR: "data/cocoa-cls/val2014"
+  TRAIN_DATASET_NAME: "cocoa_mini_train"
+  VAL_DATASET_NAME: "cocoa_mini_val"
+  VISIBLE_EVAL_DATASET_NAME: "cocoa_mini_visible_eval"
+
+  LOSS:
+    # Mask BCE weights. Bump OCCLUDER_MASK_WEIGHT to 3-10 if your derived
+    # occluder GT is sparse and the model is collapsing to all-zero
+    # (loss stalls around 0.005 with predictions < 0.06 sigmoid output).
+    OCCLUDER_MASK_WEIGHT: 1.0
+    OCCLUDEE_MASK_WEIGHT: 1.0
+    # Boundary BCE+Dice weights. Only active when HEAD.USE_BOUNDARY=True.
+    OCCLUDER_BOUNDARY_WEIGHT: 0.5
+    OCCLUDEE_BOUNDARY_WEIGHT: 0.5
+
+  HEAD:
+    # Boundary supervision hurts segm AP on the 100-image mini set
+    # (regularization overwhelms the small-data signal). Flip to True for
+    # full train2014; the BCNet paper relies on it for accuracy gains.
+    USE_BOUNDARY: False
+    # GCN (non-local) graph reasoning in Layer 1 — the BCNet paper's
+    # signature module. Cheap (~few MB extra VRAM); leave on by default.
+    USE_GCN: True
