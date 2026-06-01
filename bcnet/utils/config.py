@@ -33,7 +33,10 @@ def _add_bcnet_defaults(cfg: CfgNode) -> None:
     cfg.BCNET.VISIBLE_EVAL_IMG_DIR = "data/cocoa-cls/val2014"
     cfg.BCNET.VISIBLE_EVAL_DATASET_NAME = "cocoa_mini_visible_eval"
 
-    # Loss weights for the bilayer head.
+    # Loss weights for the bilayer head. Boundary loss is BCE + weighted
+    # BCE (~2x a plain BCE), so weights here scale that combined term.
+    # 0.5/0.5 = paper's symmetric weighting; empirically best on the mini
+    # set too (a 0.25/0.5 ablation regressed by ~3 segm AP).
     cfg.BCNET.LOSS = CfgNode()
     cfg.BCNET.LOSS.OCCLUDER_MASK_WEIGHT = 1.0
     cfg.BCNET.LOSS.OCCLUDEE_MASK_WEIGHT = 1.0
@@ -42,9 +45,9 @@ def _add_bcnet_defaults(cfg: CfgNode) -> None:
 
     # Toggle features that can be turned off in early experiments.
     cfg.BCNET.HEAD = CfgNode()
-    # Boundary supervision empirically hurt segm AP on the 100-image mini set
-    # (regularisation overwhelms the small-data signal). Re-enable for full-scale runs.
-    cfg.BCNET.HEAD.USE_BOUNDARY = False
+    # Boundary supervision is a core BCNet component; default ON to match
+    # the paper. YAMLs can flip it OFF for ablations.
+    cfg.BCNET.HEAD.USE_BOUNDARY = True
     # Non-local graph reasoning in Layer 1 (the BCNet paper's signature module).
     cfg.BCNET.HEAD.USE_GCN = True
 

@@ -114,15 +114,22 @@ BCNET:
     # (loss stalls around 0.005 with predictions < 0.06 sigmoid output).
     OCCLUDER_MASK_WEIGHT: 1.0
     OCCLUDEE_MASK_WEIGHT: 1.0
-    # Boundary BCE+Dice weights. Only active when HEAD.USE_BOUNDARY=True.
+    # Boundary loss = mean(BCE) + mean(BCE * gaussian_weight), so each
+    # contributes ~2x a plain BCE term per branch. Weights below scale
+    # that combined term. Only active when HEAD.USE_BOUNDARY=True.
+    # 0.5/0.5 matches the source's symmetric weighting; we tried 0.25 on
+    # the mini set to "give mask_loss more room" and AP regressed (see
+    # README), so the symmetric default is empirically best here too.
     OCCLUDER_BOUNDARY_WEIGHT: 0.5
     OCCLUDEE_BOUNDARY_WEIGHT: 0.5
 
   HEAD:
-    # Boundary supervision hurts segm AP on the 100-image mini set
-    # (regularization overwhelms the small-data signal). Flip to True for
-    # full train2014; the BCNet paper relies on it for accuracy gains.
-    USE_BOUNDARY: False
+    # Boundary supervision (BCE + Gaussian-weighted BCE). The BCNet paper
+    # treats this as a core component; we default to True to stay aligned.
+    # If you observe AP regress on the 100-image mini set, lower
+    # OCCLUDER_BOUNDARY_WEIGHT / OCCLUDEE_BOUNDARY_WEIGHT rather than
+    # disabling the head entirely.
+    USE_BOUNDARY: True
     # GCN (non-local) graph reasoning in Layer 1 — the BCNet paper's
     # signature module. Cheap (~few MB extra VRAM); leave on by default.
     USE_GCN: True

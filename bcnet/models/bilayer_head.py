@@ -5,15 +5,22 @@ Replaces Mask R-CNN's single mask head with two stacked branches:
   - Layer 1 (occluder, class-agnostic): predicts what is *covering* the
     target inside the ROI. Supervised by `instances.gt_occluder_masks`.
   - Layer 2 (occludee, per-class):      predicts the target's own visible
-    modal mask, conditioned on Layer 1 features.
-    Supervised by `instances.gt_masks` (= COCOA `visible_mask`).
+    modal mask. Layer 1's post-attention feature is fused into Layer 2's
+    input via additive residual (`x_roi + f_L1`), so Layer 2 sees the
+    occluder reasoning for free. Supervised by `instances.gt_masks`
+    (= COCOA `visible_mask`).
 
-Each branch optionally exposes a parallel class-agnostic *boundary* head
-that predicts where the mask edge lies. The boundary GT is derived
-on-the-fly from the (already cropped + resized) mask GT via a
-morphological gradient (dilation - erosion). Boundary supervision is the
-"contour-aware" component the BCNet paper relies on for its accuracy
-gains. Gate with `cfg.BCNET.HEAD.USE_BOUNDARY`; weights live in
+Both layers run their conv stack followed by a non-local (GCN) block;
+each layer has its own attention parameters. Each layer also exposes an
+optional class-agnostic *boundary* predictor with an independent deconv,
+so the boundary upsample does not share statistics with the mask path.
+
+The boundary GT is derived on-the-fly from the cropped + resized mask GT
+via a morphological gradient (dilation - erosion). Boundary supervision
+is the paper's "contour-aware" component; loss is BCE plus a per-pixel
+Gaussian-weighted BCE (`weight = 1 + gaussian(contour, sigma=1) / 50`),
+mirroring `lkeab/BCNet`'s `JointLoss(BceLoss, BceLoss)`. Gate with
+`cfg.BCNET.HEAD.USE_BOUNDARY`; weights live in
 `cfg.BCNET.LOSS.{OCCLUDER,OCCLUDEE}_BOUNDARY_WEIGHT`.
 
 The head registers itself into Detectron2's `ROI_MASK_HEAD_REGISTRY` so
@@ -201,27 +208,25 @@ def _occluder_mask_loss(
     return F.binary_cross_entropy_with_logits(pred, gt, reduction="mean")
 
 
-def _dice_loss(pred_logits: torch.Tensor, gt: torch.Tensor, eps: float = 1.0) -> torch.Tensor:
-    """Soft Dice loss between sigmoid(logits) and a binary GT, per instance.
+_GAUSSIAN_KERNEL_CACHE: dict[tuple[torch.device, torch.dtype, float, int], torch.Tensor] = {}
 
-    Boundary maps are extremely sparse (most pixels are non-edge), which
-    drowns plain BCE in easy zeros. Dice's set-overlap form puts the
-    rare positives on equal footing with the abundant negatives.
 
-    Args:
-        pred_logits: (N, 1, H, W) raw logits.
-        gt:          (N, 1, H, W) binary float in {0, 1}.
-        eps:         smoothing constant (also avoids 0/0 on empty GT).
+def _gaussian_blur(x: torch.Tensor, sigma: float = 1.0, kernel_size: int = 7) -> torch.Tensor:
+    """Apply a (kernel_size, kernel_size) Gaussian blur.
 
-    Returns:
-        Scalar mean Dice loss in [0, 1].
+    Mirrors `scipy.ndimage.gaussian_filter(..., sigma=1)` used by the source
+    project to build a boundary importance map. Kernel is cached per
+    (device, dtype) so the per-step cost is one conv2d.
     """
-    pred = pred_logits.sigmoid().flatten(1)
-    gt = gt.flatten(1)
-    inter = (pred * gt).sum(dim=1)
-    union = pred.sum(dim=1) + gt.sum(dim=1)
-    dice = (2.0 * inter + eps) / (union + eps)
-    return (1.0 - dice).mean()
+    key = (x.device, x.dtype, sigma, kernel_size)
+    kernel = _GAUSSIAN_KERNEL_CACHE.get(key)
+    if kernel is None:
+        coords = torch.arange(kernel_size, dtype=x.dtype, device=x.device) - (kernel_size - 1) / 2.0
+        g1d = torch.exp(-(coords ** 2) / (2.0 * sigma * sigma))
+        g1d = g1d / g1d.sum()
+        kernel = (g1d[:, None] * g1d[None, :]).view(1, 1, kernel_size, kernel_size)
+        _GAUSSIAN_KERNEL_CACHE[key] = kernel
+    return F.conv2d(x, kernel, padding=kernel_size // 2)
 
 
 def _boundary_loss(
@@ -231,7 +236,14 @@ def _boundary_loss(
     mask_side_len: int,
     log_prefix: str,
 ) -> torch.Tensor:
-    """Class-agnostic BCE + Dice on boundary logits vs morphological-gradient GT.
+    """Class-agnostic BCE on boundary logits, with the BCNet paper's weighted
+    + unweighted dual term.
+
+    Reproduces lkeab/BCNet's `JointLoss(BceLoss, BceLoss)`:
+        loss = mean( BCE(pred, gt_contour) )
+             + mean( BCE(pred, gt_contour) * weight )
+    where `weight = 1 + gaussian_filter(contour, sigma=1) / 50` is a
+    contour-neighborhood importance map (per the source's `boundary.py`).
 
     Args:
         pred_b_logits: (N_total, 1, H, W) logits from a boundary predictor.
@@ -239,10 +251,6 @@ def _boundary_loss(
         gt_field:      "gt_masks" (occludee) or "gt_occluder_masks" (occluder).
         mask_side_len: spatial size of the predictor output.
         log_prefix:    tag used when writing the GT-positive rate scalar.
-
-    Combination: BCE + Dice with equal weighting. BCE gives a smooth
-    pixel-wise signal; Dice compensates for the boundary sparsity so the
-    branch doesn't trivially predict all-zero.
     """
     assert pred_b_logits.size(1) == 1
     gt_mask = _gather_cropped_gt(pred_b_logits, instances, gt_field, mask_side_len)
@@ -252,15 +260,15 @@ def _boundary_loss(
     gt_boundary = _mask_to_boundary(gt_mask)  # (N, 1, H, W) in {0, 1}
 
     with torch.no_grad():
+        weight = 1.0 + _gaussian_blur(gt_boundary, sigma=1.0) / 50.0
         storage = get_event_storage()
         storage.put_scalar(
             f"bcnet/{log_prefix}_boundary_gt_positive_rate",
             gt_boundary.mean().item(),
         )
 
-    bce = F.binary_cross_entropy_with_logits(pred_b_logits, gt_boundary, reduction="mean")
-    dice = _dice_loss(pred_b_logits, gt_boundary)
-    return bce + dice
+    bce_pix = F.binary_cross_entropy_with_logits(pred_b_logits, gt_boundary, reduction="none")
+    return bce_pix.mean() + (bce_pix * weight).mean()
 
 
 @ROI_MASK_HEAD_REGISTRY.register()
@@ -286,6 +294,13 @@ class BCNetBilayerMaskHead(BaseMaskRCNNHead):
     ):
         super().__init__(**kwargs)
         in_ch = input_shape.channels
+        # Layer 2 mixes the ROI feature and the Layer 1 feature via
+        # additive residual (`x_ori + x_layer1`, per the source). This only
+        # works when both tensors share channel count.
+        assert in_ch == conv_dim, (
+            f"BCNetBilayerMaskHead requires input channels ({in_ch}) == "
+            f"conv_dim ({conv_dim}) for the Layer 2 residual fusion."
+        )
 
         # Layer 1: occluder branch (class-agnostic).
         self.occ_convs = _build_conv_stack(in_ch, conv_dim, num_conv, conv_norm)
@@ -298,25 +313,43 @@ class BCNetBilayerMaskHead(BaseMaskRCNNHead):
         self.occ_deconv_relu = nn.ReLU()
         self.occ_predictor = Conv2d(conv_dim, 1, kernel_size=1, stride=1, padding=0)
 
-        # Layer 2: occludee branch. Takes [ROI feat | layer1 feat] concat'd
-        # along channels, so its first conv sees in_ch + conv_dim.
-        self.tgt_convs = _build_conv_stack(in_ch + conv_dim, conv_dim, num_conv, conv_norm)
+        # Layer 2: occludee branch. Receives `x_ori + layer1_feat` (matches
+        # the source's residual fusion), so the first conv sees `in_ch`.
+        self.tgt_convs = _build_conv_stack(in_ch, conv_dim, num_conv, conv_norm)
+        # Mirror Layer 1's non-local block: the source ships a second
+        # attention module inside Layer 2 (`conv_norm_relus[cnt == 1]`).
+        self.tgt_gcn = GCNBlock(conv_dim) if use_gcn else None
         self.tgt_deconv = ConvTranspose2d(conv_dim, conv_dim, kernel_size=2, stride=2, padding=0)
         self.tgt_deconv_relu = nn.ReLU()
         self.tgt_predictor = Conv2d(conv_dim, num_classes, kernel_size=1, stride=1, padding=0)
 
-        # Optional boundary predictors. Class-agnostic in both branches: a
-        # pixel is either on a contour or not, regardless of category.
+        # Optional boundary predictors. The source uses an independent
+        # deconv+1x1 chain per branch (`boundary_deconv_bo` / `boundary_deconv`)
+        # rather than sharing the mask path's upsample, so we do the same.
         self.use_boundary = use_boundary
         if use_boundary:
+            self.occ_boundary_deconv = ConvTranspose2d(conv_dim, conv_dim, kernel_size=2, stride=2, padding=0)
+            self.occ_boundary_deconv_relu = nn.ReLU()
             self.occ_boundary_predictor = Conv2d(conv_dim, 1, kernel_size=1, stride=1, padding=0)
+            self.tgt_boundary_deconv = ConvTranspose2d(conv_dim, conv_dim, kernel_size=2, stride=2, padding=0)
+            self.tgt_boundary_deconv_relu = nn.ReLU()
             self.tgt_boundary_predictor = Conv2d(conv_dim, 1, kernel_size=1, stride=1, padding=0)
         else:
+            self.occ_boundary_deconv = None
             self.occ_boundary_predictor = None
+            self.tgt_boundary_deconv = None
             self.tgt_boundary_predictor = None
 
         # Init: MSRA for convs, small-std normal for the 1x1 predictors.
-        for m in list(self.occ_convs) + [self.occ_deconv] + list(self.tgt_convs) + [self.tgt_deconv]:
+        msra_modules = (
+            list(self.occ_convs)
+            + [self.occ_deconv]
+            + list(self.tgt_convs)
+            + [self.tgt_deconv]
+        )
+        if use_boundary:
+            msra_modules += [self.occ_boundary_deconv, self.tgt_boundary_deconv]
+        for m in msra_modules:
             weight_init.c2_msra_fill(m)
         predictors = [self.occ_predictor, self.tgt_predictor]
         if use_boundary:
@@ -372,28 +405,40 @@ class BCNetBilayerMaskHead(BaseMaskRCNNHead):
         if self.use_gcn:
             f = self.occ_gcn(f)
         layer1_feat = f  # Layer 2 reads this AFTER any GCN reasoning.
-        f_up = self.occ_deconv_relu(self.occ_deconv(f))
-        occ_mask_logits = self.occ_predictor(f_up)
-        occ_boundary_logits = (
-            self.occ_boundary_predictor(f_up) if self.use_boundary else None
-        )
+
+        f_up_mask = self.occ_deconv_relu(self.occ_deconv(f))
+        occ_mask_logits = self.occ_predictor(f_up_mask)
+        if self.use_boundary:
+            f_up_b = self.occ_boundary_deconv_relu(self.occ_boundary_deconv(f))
+            occ_boundary_logits = self.occ_boundary_predictor(f_up_b)
+        else:
+            occ_boundary_logits = None
         return occ_mask_logits, occ_boundary_logits, layer1_feat
 
     def _layer2(self, x: torch.Tensor, layer1_feat: torch.Tensor):
         """Run the occludee branch conditioned on Layer 1 features.
 
+        Layer 2 input = `x + layer1_feat` (additive residual, matching the
+        source). Layer 2 then runs its own conv stack and non-local block
+        before two parallel deconv+predictor branches (mask, boundary).
+
         Returns:
             tgt_mask_logits:     (N, C, 2H, 2W). C=1 for class-agnostic.
             tgt_boundary_logits: (N, 1, 2H, 2W) or None.
         """
-        f = torch.cat([x, layer1_feat], dim=1)
+        f = x + layer1_feat
         for conv in self.tgt_convs:
             f = conv(f)
-        f_up = self.tgt_deconv_relu(self.tgt_deconv(f))
-        tgt_mask_logits = self.tgt_predictor(f_up)
-        tgt_boundary_logits = (
-            self.tgt_boundary_predictor(f_up) if self.use_boundary else None
-        )
+        if self.use_gcn:
+            f = self.tgt_gcn(f)
+
+        f_up_mask = self.tgt_deconv_relu(self.tgt_deconv(f))
+        tgt_mask_logits = self.tgt_predictor(f_up_mask)
+        if self.use_boundary:
+            f_up_b = self.tgt_boundary_deconv_relu(self.tgt_boundary_deconv(f))
+            tgt_boundary_logits = self.tgt_boundary_predictor(f_up_b)
+        else:
+            tgt_boundary_logits = None
         return tgt_mask_logits, tgt_boundary_logits
 
     def forward(self, x: torch.Tensor, instances: List[Instances]):

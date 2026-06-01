@@ -5,10 +5,14 @@ Segmentation with Overlapping BiLayers*, CVPR 2021) on top of
 **Detectron2 0.6**, trained on the **COCOA** amodal dataset.
 
 > Status: all four phases (skeleton / data / model / training+eval) are
-> complete. Bilayer + class-agnostic occludee head + boundary head + GCN
-> (non-local) reasoning are all implemented and gated by config flags so
-> you can ablate them individually. An amodal head is *not* implemented
-> (the BCNet paper doesn't ship one either).
+> complete. The bilayer head matches the paper's structure end-to-end:
+> non-local reasoning in *both* layers, additive residual fusion of Layer 1
+> features into Layer 2, and an independent boundary deconv per branch.
+> Boundary supervision uses the paper's BCE + Gaussian-weighted-BCE
+> joint loss. Everything that can be ablated (boundary on/off, GCN on/off,
+> class-agnostic vs per-class occludee) is exposed via config flags. An
+> amodal head is *not* implemented (the BCNet paper doesn't ship one
+> either).
 
 ## Idea in one paragraph
 
@@ -18,13 +22,17 @@ branches** inside each ROI:
 * **Layer 1 (occluder, class-agnostic):** predicts the mask of whatever
   is *covering* the target inside the ROI.
 * **Layer 2 (occludee, per-class or class-agnostic):** predicts the
-  target's own visible (modal) mask, conditioned on Layer 1's features.
+  target's own visible (modal) mask. Layer 1's post-attention feature
+  is fused into Layer 2's input via additive residual (`x_roi + f_L1`),
+  giving Layer 2 globally-reasoned occluder context for free.
 
-Explicitly modelling "what is occluding what" gives a strong signal in
-heavily occluded scenes — exactly what COCOA's amodal annotations
-expose. Optional extras: a non-local **GCN** block on Layer 1 features
-for ROI-level global reasoning, and a parallel **boundary** head on both
-branches supervised by a morphological-gradient contour map.
+Both layers have a non-local **GCN** block after their conv stack for
+ROI-level graph reasoning, and each layer has a parallel **boundary**
+predictor (own deconv + 1x1) supervised by a morphological-gradient
+contour map under BCE + Gaussian-weighted-BCE loss — the paper's
+contour-aware joint loss. Explicitly modelling "what is occluding what"
+gives a strong signal in heavily occluded scenes; exactly what COCOA's
+amodal annotations expose.
 
 ## Project layout
 
@@ -60,7 +68,7 @@ BCNet/
 ├── requirements.txt
 ├── .env.example                    # PYTHONUTF8 / KMP_DUPLICATE_LIB_OK (Windows)
 └── output/                         # per-run artifacts (one sub-dir per run)
-    ├── run2k_clsagn/               # example: 2000-iter bilayer-only baseline
+    ├── run_paper_align/            # example: paper-aligned run reported below
     │   ├── config.yaml             #   resolved cfg actually used by this run (post-merge)
     │   ├── log.txt                 #   full Detectron2 stdout/stderr capture
     │   ├── metrics.json            #   JSON-lines, one record per logging step (feeds plot_losses.py)
@@ -70,8 +78,6 @@ BCNet/
     │   ├── loss_curves.png         #   rendered by tools/plot_losses.py
     │   ├── eval/<dataset>/         #   COCOEvaluator dump: coco_instances_results.json + per-class AP
     │   └── viz/                    #   rendered by tools/viz_predictions.py — pred mask overlays
-    ├── run2k_boundary/             # same shape; BCNET.HEAD.USE_BOUNDARY=True
-    ├── run2k_gcn/                  # same shape; BCNET.HEAD.USE_GCN=True
     └── viz_occluder/               # output of tools/viz_occluder_samples.py (data viz, no model)
 ```
 
@@ -235,29 +241,32 @@ cards, edit that file (no need to retype the whole config).
 
 ## Architecture status
 
-| Component                              | Status        | Config flag                                  |
-|----------------------------------------|---------------|----------------------------------------------|
-| Bilayer ROI head (occluder + occludee) | implemented   | hardcoded (the whole point)                  |
-| Class-agnostic occludee head           | default ON    | `MODEL.ROI_MASK_HEAD.CLS_AGNOSTIC_MASK`      |
-| Boundary supervision (BCE + Dice)      | default OFF   | `BCNET.HEAD.USE_BOUNDARY`                    |
-| GCN (non-local) Layer 1                | default ON    | `BCNET.HEAD.USE_GCN`                         |
-| Visible-mask mAP eval                  | implemented   | runs in `--eval-only`                        |
-| Amodal head                            | not implemented | n/a — BCNet paper doesn't ship one either  |
+| Component                                       | Status          | Config flag                                  |
+|-------------------------------------------------|-----------------|----------------------------------------------|
+| Bilayer ROI head (occluder + occludee)          | implemented     | hardcoded (the whole point)                  |
+| Layer 2 input fusion: `x_roi + f_L1` (residual) | implemented     | hardcoded — matches the paper                |
+| Class-agnostic occludee head                    | default ON      | `MODEL.ROI_MASK_HEAD.CLS_AGNOSTIC_MASK`      |
+| GCN (non-local) on Layer 1 *and* Layer 2        | default ON      | `BCNET.HEAD.USE_GCN`                         |
+| Boundary supervision (BCE + Gaussian-weighted BCE) | default ON   | `BCNET.HEAD.USE_BOUNDARY`                    |
+| Independent deconv per boundary branch          | implemented     | hardcoded — matches the paper                |
+| Visible-mask mAP eval                           | implemented     | runs in `--eval-only`                        |
+| Amodal head                                     | not implemented | n/a — BCNet paper doesn't ship one either    |
 
-## Reproduced results (mini set, 100 imgs, 2000 iter, ~28 min on GTX 1650)
+## Reproduced results
 
-| Metric    | baseline (bilayer only) | + boundary | + GCN  |
-|-----------|-------------------------|------------|--------|
-| bbox AP   | 22.02                   | 19.41      | 21.54  |
-| bbox AP50 | 52.81                   | 52.58      | 55.48  |
-| segm AP   | 14.31                   | 11.30      | 14.01  |
-| segm AP50 | 42.65                   | 36.27      | 38.83  |
-| segm AP_l | 22.81                   | 19.05      | 25.37  |
+**Paper-aligned model** (1000 iter, mini set, GTX 1650, ~14 min). Loss
+weights come straight from `configs/bcnet_train.yaml` — `0.5 / 0.5` for
+the two boundary weights, matching the source repo's symmetric setup.
+
+| Task | AP    | AP50  | AP75  | APs   | APm   | APl    |
+|------|-------|-------|-------|-------|-------|--------|
+| bbox | 16.51 | 42.07 | 10.20 | 2.01  | 15.80 | 25.25  |
+| segm | 8.32  | 23.22 | 3.86  | 1.46  | 5.76  | 13.37  |
 
 These numbers are about *data*, not about *code*: 100 images is too
-small a regime to validate the boundary / GCN heads (boundary even
-hurts here). For a real comparison, train on full `train2014` — the
-schedule + config is `configs/bcnet_train_8gb.yaml`.
+small a regime to validate the boundary / GCN heads. For a real
+comparison, train on full `train2014` — the schedule + config is
+`configs/bcnet_train_8gb.yaml`.
 
 ## Caveats specific to COCOA dataset
 
