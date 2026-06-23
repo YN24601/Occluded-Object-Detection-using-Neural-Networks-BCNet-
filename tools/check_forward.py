@@ -10,6 +10,12 @@ Run:
 
 from __future__ import annotations
 
+import os
+
+# Windows: torch and numpy (MKL) each ship their own copy of Intel's OpenMP runtime
+# (libiomp5md.dll); the runtime aborts on a duplicate. Allow it before importing them.
+os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
+
 import sys
 from pathlib import Path
 

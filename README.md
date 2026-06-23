@@ -45,7 +45,8 @@ BCNet/
 │   ├── models/
 │   │   └── bilayer_head.py         # BCNetBilayerMaskHead: occluder + occludee + GCN + boundary
 │   ├── utils/
-│   │   └── config.py               # setup_bcnet_config() + cfg.BCNET defaults
+│   │   ├── config.py               # setup_bcnet_config() + cfg.BCNET / cfg.WANDB defaults
+│   │   └── wandb_writer.py         # init_wandb() + WandbWriter (EventStorage -> W&B)
 │   └── evaluation.py               # build_bcnet_evaluator -> COCOEvaluator on visible eval
 ├── configs/
 │   ├── bcnet_train.yaml            # default — tuned for 4 GB VRAM (GTX 1650)
@@ -216,11 +217,32 @@ python train.py BCNET.HEAD.USE_BOUNDARY True OUTPUT_DIR ./output/run_boundary
 # Use the 8 GB config (longer schedule, larger inputs)
 python train.py --config-file configs/bcnet_train_8gb.yaml
 
-# Train on a different split (e.g. full val2014 instead of the mini set)
-python train.py \
-    BCNET.TRAIN_JSON data/cocoa-cls/annotations/COCOA_val_occluded_30.json \
-    BCNET.VAL_JSON   data/cocoa-cls/annotations/COCOA_val_occluded_30.json
 ```
+
+## Experiment tracking (Weights & Biases)
+
+Tracking is **off by default** so the repo runs offline. To stream metrics
+to [wandb.ai](https://wandb.ai), log in once (`wandb login`, or export
+`WANDB_API_KEY`) then flip `WANDB.ENABLED`:
+
+```bash
+python train.py \
+    WANDB.ENABLED True \
+    WANDB.PROJECT bcnet-cocoa \
+    WANDB.RUN_NAME run2k_gcn \
+    WANDB.TAGS '["mini","gcn"]' \
+    OUTPUT_DIR ./output/run2k_gcn
+```
+
+A `WandbWriter` (added to the trainer's writer list in `train.py`) drains
+Detectron2's `EventStorage`, so **every** scalar already logged to
+`metrics.json` — per-step `total_loss` / `loss_*` / `lr` / timing, plus the
+periodic COCOEvaluator metrics (`bbox/AP`, `segm/AP`, ...) `EvalHook` writes
+back — is mirrored to W&B under the same keys. The full resolved cfg is
+logged as the run config for reproducibility. `--eval-only` runs log the
+final flattened eval results. All knobs live under `cfg.WANDB` (see
+`configs/bcnet_train.yaml`); set `WANDB_MODE=offline` to log locally without
+a network connection.
 
 ## Tuning for your GPU
 
@@ -250,7 +272,6 @@ cards, edit that file (no need to retype the whole config).
 | Boundary supervision (BCE + Gaussian-weighted BCE) | default ON   | `BCNET.HEAD.USE_BOUNDARY`                    |
 | Independent deconv per boundary branch          | implemented     | hardcoded — matches the paper                |
 | Visible-mask mAP eval                           | implemented     | runs in `--eval-only`                        |
-| Amodal head                                     | not implemented | n/a — BCNet paper doesn't ship one either    |
 
 ## Reproduced results
 

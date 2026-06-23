@@ -16,6 +16,13 @@ Usage:
 
 from __future__ import annotations
 
+import os
+
+# Windows: torch, numpy (MKL), matplotlib and opencv each ship their own copy of
+# Intel's OpenMP runtime (libiomp5md.dll). The runtime aborts when a duplicate is
+# loaded, so allow it here. Must run before any of those libraries are imported.
+os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
+
 import argparse
 import sys
 from pathlib import Path

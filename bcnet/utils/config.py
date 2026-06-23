@@ -51,6 +51,18 @@ def _add_bcnet_defaults(cfg: CfgNode) -> None:
     # Non-local graph reasoning in Layer 1 (the BCNet paper's signature module).
     cfg.BCNET.HEAD.USE_GCN = True
 
+    # Weights & Biases experiment tracking. Disabled by default so the repo
+    # runs without a W&B account / network; flip ENABLED True (or pass
+    # `WANDB.ENABLED True` on the CLI) to mirror metrics to wandb.ai.
+    cfg.WANDB = CfgNode()
+    cfg.WANDB.ENABLED = False
+    cfg.WANDB.PROJECT = "bcnet-cocoa"
+    cfg.WANDB.ENTITY = ""        # "" -> your default W&B entity
+    cfg.WANDB.RUN_NAME = ""      # "" -> W&B auto-generates a name
+    cfg.WANDB.GROUP = ""         # group related runs (e.g. an ablation set)
+    cfg.WANDB.NOTES = ""         # free-text description of the run
+    cfg.WANDB.TAGS = []          # e.g. ["mini", "gcn", "boundary"]
+
 
 def setup_bcnet_config(config_file: str | None = None, opts: list | None = None) -> CfgNode:
     """Build a Detectron2 CfgNode for BCNet.

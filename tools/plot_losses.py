@@ -13,6 +13,12 @@ Usage:
 
 from __future__ import annotations
 
+import os
+
+# Windows: matplotlib (and numpy/MKL) ship Intel's OpenMP runtime (libiomp5md.dll),
+# which aborts on a duplicate. Allow it before importing those libraries.
+os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
+
 import argparse
 import json
 from collections import defaultdict

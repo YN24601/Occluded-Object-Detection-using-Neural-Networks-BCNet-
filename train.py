@@ -19,6 +19,13 @@ it up from there.
 
 from __future__ import annotations
 
+import os
+
+# Windows: torch, numpy (MKL) and matplotlib each ship their own copy of Intel's
+# OpenMP runtime (libiomp5md.dll); the runtime aborts on a duplicate. Allow it
+# before importing those libraries (detectron2 pulls in torch/numpy below).
+os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
+
 from detectron2.data import build_detection_train_loader
 from detectron2.engine import DefaultTrainer, default_argument_parser, default_setup, launch
 from detectron2.utils.logger import setup_logger
@@ -26,7 +33,7 @@ from detectron2.utils.logger import setup_logger
 import bcnet  # noqa: F401  (registers BCNetBilayerMaskHead)
 from bcnet.data import BCNetDatasetMapper, register_cocoa_datasets
 from bcnet.evaluation import build_bcnet_evaluator
-from bcnet.utils import setup_bcnet_config
+from bcnet.utils import init_wandb, setup_bcnet_config
 
 
 class BCNetTrainer(DefaultTrainer):
@@ -43,6 +50,16 @@ class BCNetTrainer(DefaultTrainer):
         # BCNet-specific GT fields are only needed for *training* losses,
         # not for COCOEvaluator (which reads its GT from the registered JSON).
         return build_bcnet_evaluator(cfg, dataset_name, output_folder)
+
+    def after_step(self):
+        super().after_step()
+        if not self.cfg.WANDB.ENABLED:
+            return
+        import wandb
+        if wandb.run is None:
+            return
+        metrics = {k: v for k, (v, _) in self.storage.latest().items()}
+        wandb.log(metrics, step=self.iter)
 
 
 def _setup(args):
@@ -68,6 +85,11 @@ def _setup(args):
 def main(args):
     cfg = _setup(args)
 
+    # Start the W&B run (no-op unless WANDB.ENABLED and main process). During
+    # training the WandbWriter drains EventStorage; for --eval-only there are
+    # no writers, so we log the returned results explicitly below.
+    init_wandb(cfg, resume=args.resume)
+
     if args.eval_only:
         # COCOEvaluator runs against cfg.DATASETS.TEST (the visible eval
         # split) via BCNetTrainer.build_evaluator. Amodal eval will be
@@ -78,7 +100,15 @@ def main(args):
         DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
             cfg.MODEL.WEIGHTS, resume=args.resume
         )
-        return BCNetTrainer.test(cfg, model)
+        results = BCNetTrainer.test(cfg, model)
+        if cfg.WANDB.ENABLED:
+            import wandb
+            from detectron2.evaluation.testing import flatten_results_dict
+
+            if wandb.run is not None and results:
+                wandb.log(flatten_results_dict(results))
+                wandb.finish()
+        return results
 
     trainer = BCNetTrainer(cfg)
     trainer.resume_or_load(resume=args.resume)

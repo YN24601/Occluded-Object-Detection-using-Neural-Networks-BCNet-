@@ -133,3 +133,21 @@ BCNET:
     # GCN (non-local) graph reasoning in Layer 1 -- the BCNet paper's
     # signature module. Cheap (~few MB extra VRAM); leave on by default.
     USE_GCN: True
+
+# ---------------------------------------------------------------------------
+# Weights & Biases experiment tracking (defined in bcnet/utils/config.py).
+# Off by default so the repo runs offline. Enable per-run on the CLI, e.g.:
+#   python train.py WANDB.ENABLED True WANDB.RUN_NAME run2k_gcn \
+#       WANDB.TAGS '["mini","gcn"]'
+# Requires `wandb login` (or WANDB_API_KEY) once on the machine. The
+# WandbWriter mirrors every EventStorage scalar -- per-step losses/lr and
+# the periodic COCOEvaluator metrics (bbox/AP, segm/AP, ...) -- to wandb.ai.
+# ---------------------------------------------------------------------------
+WANDB:
+  ENABLED: True
+  PROJECT: "Occluded-Object-Detection-using-Neural-Networks-BCNet-"
+  ENTITY: "yana-zhang-uhh"
+  RUN_NAME: ""      # "" -> W&B auto-generates a name
+  GROUP: ""         # group related runs (e.g. an ablation set)
+  NOTES: ""
+  TAGS: []          # e.g. ["mini", "gcn", "boundary"]
