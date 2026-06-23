@@ -1,4 +1,4 @@
-# BCNet training config — tuned for a 4 GB VRAM GPU.
+# BCNet training config -- tuned for a 4 GB VRAM GPU.
 #
 # Inherits Mask R-CNN R-50 FPN defaults from the Detectron2 model zoo via
 # `bcnet.utils.config.setup_bcnet_config()`, so this file only OVERRIDES
@@ -32,7 +32,7 @@ MODEL:
     SCORE_THRESH_TEST: 0.05
 
   ROI_MASK_HEAD:
-    # Registered by `bcnet.models.bilayer_head` — picks up our BCNet head.
+    # Registered by `bcnet.models.bilayer_head` -- picks up our BCNet head.
     NAME: "BCNetBilayerMaskHead"
     # 1-channel occludee head (class-agnostic). On small data this gives
     # ~80x more gradient signal per instance than per-class. Set to False
@@ -44,7 +44,7 @@ MODEL:
 
   RPN:
     # Defaults 2000/1000 (train) and 1000/1000 (test) are heavy for 4 GB.
-    # Bump back up if you have memory to spare — RPN proposals are cheap
+    # Bump back up if you have memory to spare -- RPN proposals are cheap
     # to score but expensive to keep around as activations.
     PRE_NMS_TOPK_TRAIN: 1000
     POST_NMS_TOPK_TRAIN: 500
@@ -52,7 +52,7 @@ MODEL:
     POST_NMS_TOPK_TEST: 250
 
 # ---------------------------------------------------------------------------
-# Input sizing — shorter images = fewer activations per step.
+# Input sizing -- shorter images = fewer activations per step.
 # Stock Mask R-CNN uses MIN_SIZE_TRAIN (640,672,...,800), MAX 1333. We
 # shrink both to keep peak memory in budget.
 # ---------------------------------------------------------------------------
@@ -130,6 +130,6 @@ BCNET:
     # OCCLUDER_BOUNDARY_WEIGHT / OCCLUDEE_BOUNDARY_WEIGHT rather than
     # disabling the head entirely.
     USE_BOUNDARY: True
-    # GCN (non-local) graph reasoning in Layer 1 — the BCNet paper's
+    # GCN (non-local) graph reasoning in Layer 1 -- the BCNet paper's
     # signature module. Cheap (~few MB extra VRAM); leave on by default.
     USE_GCN: True
