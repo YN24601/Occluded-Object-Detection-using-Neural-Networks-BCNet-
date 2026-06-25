@@ -1,0 +1,28 @@
+# Baseline (vanilla Mask R-CNN head) full-COCOA training on the server.
+#
+# This is the control for the BCNet comparison. It swaps the bilayer head for
+# Detectron2's stock single-layer mask head; EVERYTHING ELSE (backbone, FPN,
+# RPN, schedule, inputs, dataset, the BCNetDatasetMapper, and the modal
+# visible-mask GT in `gt_masks`) is identical to server_bcnet.yaml. The mapper's
+# extra gt_occluder_masks / gt_amodal_masks fields are simply ignored by the
+# stock head, so both models train on the SAME modal supervision -> fair compare.
+#
+# CLS_AGNOSTIC_MASK is kept True (same as BCNet) so the ONLY difference is
+# single-layer vs bilayer. For a "stock per-class Mask R-CNN" baseline instead,
+# set MODEL.ROI_MASK_HEAD.CLS_AGNOSTIC_MASK: False here.
+#
+#   CUDA_VISIBLE_DEVICES=2 python train.py --config-file configs/server_baseline.yaml --num-gpus 1
+
+_BASE_: "server_base.yaml"
+
+MODEL:
+  ROI_MASK_HEAD:
+    # Detectron2's default mask head -> reverts BCNet back to vanilla Mask R-CNN.
+    NAME: "MaskRCNNConvUpsampleHead"
+    CLS_AGNOSTIC_MASK: True
+
+OUTPUT_DIR: "./output/baseline_full"
+
+WANDB:
+  RUN_NAME: "baseline_full"
+  TAGS: ["full", "baseline"]

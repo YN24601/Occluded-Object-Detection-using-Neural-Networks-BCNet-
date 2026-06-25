@@ -1,0 +1,88 @@
+# Shared server recipe for the WTM GPU server (wtmgws11, GPU[2] = GTX 1080 Ti, 11 GB).
+#
+# This is the common base for BOTH the BCNet and the baseline runs on the
+# server. It inherits the 4 GB defaults from bcnet_train.yaml and re-tunes the
+# knobs that should change for an 11 GB Linux box training on the FULL COCOA
+# dataset. The two model-specific configs (server_bcnet.yaml / server_baseline
+# .yaml) inherit THIS file and change only the mask head + OUTPUT_DIR/W&B name.
+#
+# Run from the repo root placed on /data so the relative data/ and ./output/
+# paths below resolve onto /data (NOT the tiny /export/home).
+#   CUDA_VISIBLE_DEVICES=2 python train.py --config-file configs/server_bcnet.yaml
+
+_BASE_: "bcnet_train.yaml"
+
+MODEL:
+  BACKBONE:
+    # Unfreeze ResNet stage3 + stage4 -- 11 GB has the room and the full
+    # dataset benefits from training more of the backbone.
+    FREEZE_AT: 2
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 128
+    # Real eval / inference threshold (the 0.05 in the base is only for
+    # surfacing predictions while overfitting a tiny set).
+    SCORE_THRESH_TEST: 0.3
+  RPN:
+    # Full proposal budget -- cheap on 11 GB.
+    PRE_NMS_TOPK_TRAIN: 2000
+    POST_NMS_TOPK_TRAIN: 1000
+    PRE_NMS_TOPK_TEST: 1000
+    POST_NMS_TOPK_TEST: 500
+
+# Full-resolution inputs (standard Mask R-CNN sizing).
+INPUT:
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+  MAX_SIZE_TRAIN: 1333
+  MIN_SIZE_TEST: 800
+  MAX_SIZE_TEST: 1333
+
+DATALOADER:
+  # Linux has no spawn-deadlock issue (the NUM_WORKERS: 0 in the base is a
+  # Windows-only workaround). Use real workers to keep the GPU fed.
+  NUM_WORKERS: 4
+
+# ---------------------------------------------------------------------------
+# Schedule: ~20k iterations at IMS_PER_BATCH=2. STEPS at ~0.7 / 0.9 of MAX_ITER.
+# ---------------------------------------------------------------------------
+SOLVER:
+  IMS_PER_BATCH: 2
+  BASE_LR: 0.005           # linear scaling: 0.02 * 2/16 + a small bump
+  MAX_ITER: 20000
+  STEPS: (14000, 18000)
+  WARMUP_ITERS: 1000
+  CHECKPOINT_PERIOD: 2500
+  AMP:
+    ENABLED: True          # VRAM headroom on Pascal; GCN block forces fp32 internally
+
+TEST:
+  # Periodic eval so metrics.json carries an AP-vs-iteration curve.
+  EVAL_PERIOD: 2500
+
+# ---------------------------------------------------------------------------
+# Full COCOA dataset (relative paths resolve onto /data when run from the repo
+# root on /data). Build the derived JSONs first -- see docs/SERVER_TRAINING.md:
+#   tools/build_occluder_anns.py  -> *_with_occluder.json
+#   tools/build_eval_anns.py      -> *_visible_eval.json
+# ---------------------------------------------------------------------------
+BCNET:
+  DATA_ROOT: "data/cocoa-cls"
+  TRAIN_JSON: "data/cocoa-cls/annotations/cocoa_train2014_with_occluder.json"
+  TRAIN_IMG_DIR: "data/cocoa-cls/train2014"
+  VAL_JSON: "data/cocoa-cls/annotations/cocoa_val2014_with_occluder.json"
+  VAL_IMG_DIR: "data/cocoa-cls/val2014"
+  VISIBLE_EVAL_JSON: "data/cocoa-cls/annotations/cocoa_val2014_visible_eval.json"
+  VISIBLE_EVAL_IMG_DIR: "data/cocoa-cls/val2014"
+  TRAIN_DATASET_NAME: "cocoa_train"
+  VAL_DATASET_NAME: "cocoa_val"
+  VISIBLE_EVAL_DATASET_NAME: "cocoa_val_visible_eval"
+
+# ---------------------------------------------------------------------------
+# W&B: both runs share one GROUP so BCNet and baseline overlay automatically.
+# Per-run RUN_NAME/TAGS are set in the model-specific configs. Run `wandb login`
+# once on the server (or export WANDB_API_KEY).
+# ---------------------------------------------------------------------------
+WANDB:
+  ENABLED: True
+  PROJECT: "Occluded-Object-Detection-using-Neural-Networks-BCNet-"
+  ENTITY: "yana-zhang-uhh"
+  GROUP: "full-cocoa-compare"

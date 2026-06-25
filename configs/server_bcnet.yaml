@@ -1,0 +1,22 @@
+# BCNet full-COCOA training on the server (GPU[2] GTX 1080 Ti).
+#
+# Inherits the shared server recipe; keeps the BCNetBilayerMaskHead (occluder +
+# occludee bilayer, GCN + boundary) that server_base.yaml gets from
+# bcnet_train.yaml. This is the experiment side of the BCNet-vs-baseline pair.
+#
+#   CUDA_VISIBLE_DEVICES=2 python train.py --config-file configs/server_bcnet.yaml --num-gpus 1
+
+_BASE_: "server_base.yaml"
+
+OUTPUT_DIR: "./output/bcnet_full"
+
+# Bilayer head components -- the whole point of BCNet. Left explicit here so the
+# experiment config is self-documenting.
+BCNET:
+  HEAD:
+    USE_BOUNDARY: True
+    USE_GCN: True
+
+WANDB:
+  RUN_NAME: "bcnet_full"
+  TAGS: ["full", "bcnet"]

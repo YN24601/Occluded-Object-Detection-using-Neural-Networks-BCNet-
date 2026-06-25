@@ -1,0 +1,25 @@
+# Smoke test: validate the full-data pipeline + GPU end-to-end in ~minutes
+# BEFORE committing hours to a real run. Uses the FULL datasets (so it also
+# proves the large train/val JSONs load and register), but stops at 100 iters
+# with no eval and no W&B.
+#
+# Keeps the BCNet head (the heavier of the two) so if this fits in 11 GB, the
+# baseline will too. Watch VRAM with `nvidia-smi` while it runs.
+#
+#   CUDA_VISIBLE_DEVICES=2 python train.py --config-file configs/server_smoke.yaml --num-gpus 1
+
+_BASE_: "server_base.yaml"
+
+SOLVER:
+  MAX_ITER: 100
+  STEPS: ()
+  WARMUP_ITERS: 20
+  CHECKPOINT_PERIOD: 100
+
+TEST:
+  EVAL_PERIOD: 0           # no eval during the smoke run
+
+OUTPUT_DIR: "./output/smoke"
+
+WANDB:
+  ENABLED: False           # keep the smoke run offline

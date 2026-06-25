@@ -118,18 +118,23 @@ def main() -> None:
         # `inst.pred_masks` was already pasted into full-image resolution by
         # detector_postprocess (shape (N, H_img, W_img), binarized). The
         # BCNet-specific `pred_occluder_masks` is raw (N, 1, 28, 28) since
-        # postprocess only touches the standard `pred_masks` field.
+        # postprocess only touches the standard `pred_masks` field. The baseline
+        # (stock Mask R-CNN head) does NOT emit it, so render only the occludee
+        # panel in that case.
+        has_occ = inst.has("pred_occluder_masks")
         occludee_canvas = rgb.copy()
         occluder_canvas = rgb.copy()
         for i in range(len(inst)):
-            box = inst.pred_boxes.tensor[i].numpy()
             occludee_full = inst.pred_masks[i].numpy().astype(bool)
-            occluder_28 = inst.pred_occluder_masks[i, 0].numpy()
-            occluder_full = _paste_mask_in_image(occluder_28, box, h, w)
             occludee_canvas = _overlay(occludee_canvas, occludee_full, (60, 220, 60))
-            occluder_canvas = _overlay(occluder_canvas, occluder_full, (220, 60, 220))
+            if has_occ:
+                box = inst.pred_boxes.tensor[i].numpy()
+                occluder_28 = inst.pred_occluder_masks[i, 0].numpy()
+                occluder_full = _paste_mask_in_image(occluder_28, box, h, w)
+                occluder_canvas = _overlay(occluder_canvas, occluder_full, (220, 60, 220))
 
-        fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+        n_panels = 3 if has_occ else 2
+        fig, axes = plt.subplots(1, n_panels, figsize=(6 * n_panels, 6))
         axes[0].imshow(rgb)
         for i in range(len(inst)):
             x0, y0, x1, y1 = inst.pred_boxes.tensor[i].numpy()
@@ -138,7 +143,8 @@ def main() -> None:
             )
         axes[0].set_title(f"image + boxes (n={len(inst)})")
         axes[1].imshow(occludee_canvas); axes[1].set_title("occludee (visible) pred")
-        axes[2].imshow(occluder_canvas); axes[2].set_title("occluder pred")
+        if has_occ:
+            axes[2].imshow(occluder_canvas); axes[2].set_title("occluder pred")
         for ax in axes:
             ax.axis("off")
         fig.tight_layout()
