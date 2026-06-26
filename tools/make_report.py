@@ -115,8 +115,12 @@ def main() -> None:
     # 1. End-of-training eval (writes eval/<dataset>/ and an AP record into
     #    metrics.json so the AP table / curve below have data).
     if not args.no_eval:
+        # Disable W&B for this re-eval: the run is already finished and logged,
+        # and init_wandb would otherwise spawn a duplicate-named run in the
+        # group every time a report is generated.
         rc = _run([py, "train.py", "--config-file", args.config_file,
-                   "--eval-only", "MODEL.WEIGHTS", weights])
+                   "--eval-only", "MODEL.WEIGHTS", weights,
+                   "WANDB.ENABLED", "False"])
         if rc != 0:
             print("WARNING: eval step returned non-zero; continuing with existing metrics.json.")
 

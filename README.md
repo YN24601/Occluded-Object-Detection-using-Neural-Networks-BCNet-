@@ -50,7 +50,13 @@ BCNet/
 │   └── evaluation.py               # build_bcnet_evaluator -> COCOEvaluator on visible eval
 ├── configs/
 │   ├── bcnet_train.yaml            # default — tuned for 4 GB VRAM (GTX 1650)
-│   └── bcnet_train_8gb.yaml        # 8 GB+ VRAM variant; longer schedule, bigger inputs
+│   ├── bcnet_train_8gb.yaml        # 8 GB+ VRAM variant; longer schedule, bigger inputs
+│   ├── server_base.yaml            # full-COCOA server recipe (11 GB) — shared base
+│   ├── server_bcnet.yaml           #   BCNet bilayer head run     (-> output/bcnet_full)
+│   ├── server_baseline.yaml        #   vanilla Mask R-CNN control  (-> output/baseline_full)
+│   └── server_smoke.yaml           #   100-iter pipeline/VRAM check on full data
+├── docs/
+│   └── SERVER_TRAINING.md          # end-to-end server runbook: setup -> data -> train -> compare
 ├── tools/
 │   ├── build_mini_split.py         # filter COCOA by occlude_rate -> mini JSON
 │   ├── build_occluder_anns.py      # derive occluder masks from COCOA cross-instance overlap
@@ -59,7 +65,10 @@ BCNet/
 │   ├── check_mapper.py             # mapper end-to-end smoke test (no model)
 │   ├── check_forward.py            # full model forward + loss smoke test
 │   ├── plot_losses.py              # render loss curves from metrics.json
-│   └── viz_predictions.py          # overlay predicted occludee + occluder on val images
+│   ├── plot_metrics.py             # render eval AP curves from metrics.json
+│   ├── viz_predictions.py          # overlay predicted occludee + occluder on val images
+│   ├── make_report.py              # one-shot per-run report: eval + curves + viz + summary.md
+│   └── compare_runs.py             # BCNet vs baseline: side-by-side AP table + overlaid curve
 ├── data/cocoa-cls/                 # NOT in git — see "Dataset" below
 │   ├── annotations/                #   put COCOA *_with_classes.json here
 │   ├── train2014/                  #   put unzipped COCO 2014 train images here
@@ -263,6 +272,46 @@ point — it inherits from the 4 GB config via Detectron2's `_BASE_`
 mechanism and only changes the knobs that should change. For larger
 cards, edit that file (no need to retype the whole config).
 
+## Full-scale training & BCNet-vs-baseline comparison
+
+The mini-set runs above are for validating the pipeline. The real
+experiment — **full COCOA**, with a **vanilla Mask R-CNN baseline** trained
+under an identical recipe for a fair comparison — lives under
+`configs/server_*.yaml`. The complete walkthrough (server setup, data
+migration, smoke test, training, result collection) is in
+**[`docs/SERVER_TRAINING.md`](docs/SERVER_TRAINING.md)**.
+
+The config chain isolates the BCNet contribution to a single line — the mask
+head — so everything else (backbone, FPN, RPN, schedule, inputs, the
+`BCNetDatasetMapper` and its modal `visible_mask` GT) is identical between the
+two runs:
+
+```
+bcnet_train.yaml                 # 4 GB defaults
+   └── server_base.yaml          # full-COCOA / 11 GB recipe (FREEZE_AT 2, IMS_PER_BATCH 2,
+                                  #   BASE_LR 0.0025 + grad-clip, 20k iters, eval every 2.5k, W&B group)
+        ├── server_bcnet.yaml         # MODEL.ROI_MASK_HEAD.NAME = BCNetBilayerMaskHead
+        ├── server_baseline.yaml      # MODEL.ROI_MASK_HEAD.NAME = MaskRCNNConvUpsampleHead
+        └── server_smoke.yaml         # 100-iter pipeline/VRAM check
+```
+
+```bash
+# one GPU, run sequentially (see docs/SERVER_TRAINING.md for the full flow)
+CUDA_VISIBLE_DEVICES=2 python train.py --config-file configs/server_bcnet.yaml    --num-gpus 1
+CUDA_VISIBLE_DEVICES=2 python train.py --config-file configs/server_baseline.yaml --num-gpus 1
+
+# per-run report (eval + loss/AP curves + random test-case overlays + summary.md)
+python tools/make_report.py --config-file configs/server_bcnet.yaml    --run-dir output/bcnet_full
+python tools/make_report.py --config-file configs/server_baseline.yaml --run-dir output/baseline_full
+
+# side-by-side comparison (AP table + overlaid segm/AP curve; also live in the W&B group)
+python tools/compare_runs.py --runs output/bcnet_full output/baseline_full
+```
+
+> **LR note.** `server_base.yaml` pins `BASE_LR 0.0025` (the linear-scaling value
+> `0.02 * IMS_PER_BATCH/16`) plus gradient clipping at norm 1.0 — an earlier
+> `0.005` diverged to Inf/NaN in the RPN.
+
 ## Architecture status
 
 | Component                                       | Status          | Config flag                                  |
@@ -288,8 +337,9 @@ the two boundary weights, matching the source repo's symmetric setup.
 
 These numbers are about *data*, not about *code*: 100 images is too
 small a regime to validate the boundary / GCN heads. For a real
-comparison, train on full `train2014` — the schedule + config is
-`configs/bcnet_train_8gb.yaml`.
+comparison, train on full COCOA with the server configs and run BCNet
+against the baseline — see **[`docs/SERVER_TRAINING.md`](docs/SERVER_TRAINING.md)**
+and the "Full-scale training" section above.
 
 ## Caveats specific to COCOA dataset
 
@@ -298,8 +348,8 @@ comparison, train on full `train2014` — the schedule + config is
   COCO classes, so anything occluded by un-annotated stuff (walls,
   picture frames, image edges) cannot be recovered cross-instance.
   Loss `loss_occluder_mask` may collapse toward 0.005 with all-zero
-  predictions on small splits — this is the data, not the model. Full
-  `train2014` recovers a much higher fraction.
+  predictions on small splits — this is the data, not the model. The full
+  COCOA train split recovers a somewhat higher fraction (~32 %).
 
 * **GCN must run in fp32.** The non-local softmax overflows under AMP
   fp16 and produces NaN. The block forces fp32 via

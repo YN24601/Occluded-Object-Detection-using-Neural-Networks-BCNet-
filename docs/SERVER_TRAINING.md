@@ -180,9 +180,10 @@ scp /d/00workshop/pythonProjects/BCNet/data/cocoa-cls/annotations/COCO_amodal_tr
 ## 5. Build the derived annotation files
 
 The model trains on **derived** JSONs (occluder masks + a visible-mask eval
-split), not the raw `*_with_classes.json`. Build them once. **Run inside `tmux`**
-— the train-set occluder derivation is O(n²) per image over RLE masks and can
-take a while on the full ~80k-image split.
+split), not the raw `*_with_classes.json`. Build them once. COCOA is small (the
+annotated subset is **~2.3k train / ~1.3k val images**), so this finishes in a
+few minutes — `tmux` is optional but recommended so a dropped SSH session
+doesn't kill it.
 
 ```bash
 cd $WORK/BCNet
@@ -216,7 +217,7 @@ python tools/build_eval_anns.py \
 
 Detach with `Ctrl-b d`; reattach with `tmux attach -t prep`. Each script prints
 how many annotations got a non-empty occluder mask — on the full train split the
-coverage is much higher than the ~24 % seen on the mini set.
+coverage (~32 %) is higher than the ~24 % seen on the mini set.
 
 > These output filenames are exactly what `configs/server_base.yaml` points at.
 > If you change them, update `BCNET.*_JSON` in that file too.
@@ -236,12 +237,23 @@ python quick_check.py
 
 # (b) build the model + one forward + loss on a single batch
 CUDA_VISIBLE_DEVICES=2 python tools/check_forward.py
-[todo]
+
 # (c) 100-iter run on the FULL data (proves the big JSONs load + register and
 #     that the BCNet head fits in 11 GB). Watch VRAM in a second shell:
 #       watch -n 1 nvidia-smi
 CUDA_VISIBLE_DEVICES=2 python train.py \
     --config-file configs/server_smoke.yaml --num-gpus 1
+
+# with W&B tracking
+CUDA_VISIBLE_DEVICES=2 python train.py --config-file configs/server_smoke.yaml \
+    --num-gpus 1 WANDB.ENABLED True WANDB.RUN_NAME smoke_wandb_test
+
+# (d) baseline head check — the smoke run above exercises only the BCNet head,
+#     so do a quick 20-iter pass on the baseline config before its multi-hour
+#     run. Stock Mask R-CNN head, so this is just insurance.
+CUDA_VISIBLE_DEVICES=2 python train.py \
+    --config-file configs/server_baseline.yaml --num-gpus 1 \
+    SOLVER.MAX_ITER 20 WANDB.ENABLED False OUTPUT_DIR ./output/smoke_baseline
 ```
 
 `server_smoke.yaml` writes to `output/smoke/`, runs 100 iters, no eval, no W&B.
@@ -256,11 +268,15 @@ If it reaches iter 100 and stays under 11 GB, you are clear to train for real.
 ## 7. Full training
 
 Both runs share the same recipe (`configs/server_base.yaml`): **20k iterations**,
-`IMS_PER_BATCH 2`, `BASE_LR 0.005`, eval every 2.5k iters, AMP on. They differ in
+`IMS_PER_BATCH 2`, `BASE_LR 0.0025` (with gradient clipping at norm 1.0 — `0.005`
+diverged to Inf/NaN in the RPN), eval every 2.5k iters, AMP on. They differ in
 **one line** — the mask head — and write to separate output dirs and W&B run
 names (grouped under `full-cocoa-compare` so they overlay automatically).
 
-The single GPU runs them **sequentially**. Use `tmux` so they survive disconnects.
+At 20k iters × `IMS_PER_BATCH 2` over the **~2.3k-image** COCOA train split this
+is **~17–18 epochs**; expect roughly **3–5 h per run** on the 1080 Ti (varies
+with the periodic eval). The single GPU runs them **sequentially** — use `tmux`
+so they survive disconnects.
 
 ```bash
 cd $WORK/BCNet
