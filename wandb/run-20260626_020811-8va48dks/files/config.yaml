@@ -1,0 +1,437 @@
+_wandb:
+    value:
+        cli_version: 0.28.0
+        e:
+            4mxf3i7u3bgfjh8covn3u1fsbowflxjs:
+                args:
+                    - --config-file
+                    - configs/server_smoke.yaml
+                    - --num-gpus
+                    - "1"
+                    - WANDB.ENABLED
+                    - "True"
+                    - WANDB.RUN_NAME
+                    - smoke_wandb_test
+                codePath: train.py
+                codePathLocal: train.py
+                cpu_count: 16
+                cpu_count_logical: 16
+                cudaVersion: "12.7"
+                disk:
+                    /:
+                        total: "117570670592"
+                        used: "77632815104"
+                email: yana.zhang@studium.uni-hamburg.de
+                executable: /data/5zhang/envs/bcn_server/bin/python
+                git:
+                    commit: 15c77d9ec130482bf30620f1d10a9268bd05552a
+                    remote: https://github.com/YN24601/Occluded-Object-Detection-using-Neural-Networks-BCNet-.git
+                gpu: NVIDIA GeForce RTX 2080 Ti
+                gpu_count: 3
+                gpu_nvidia:
+                    - architecture: Turing
+                      cudaCores: 4352
+                      memoryTotal: "11811160064"
+                      name: NVIDIA GeForce RTX 2080 Ti
+                      uuid: GPU-bd9b5062-044f-0799-4d74-7930f0bad96c
+                    - architecture: Pascal
+                      cudaCores: 3584
+                      memoryTotal: "11811160064"
+                      name: NVIDIA GeForce GTX 1080 Ti
+                      uuid: GPU-c9910453-6fd3-717d-6561-2f39494b25c7
+                    - architecture: Pascal
+                      cudaCores: 3584
+                      memoryTotal: "11811160064"
+                      name: NVIDIA GeForce GTX 1080 Ti
+                      uuid: GPU-f8f4875c-74e2-a73a-ddaf-3d02f9a00a0f
+                host: wtmgws11
+                memory:
+                    total: "135036137472"
+                os: Linux-5.15.0-160-generic-x86_64-with-glibc2.31
+                program: /data/5zhang/BCNet/train.py
+                python: CPython 3.11.15
+                root: /data/5zhang/BCNet
+                startedAt: "2026-06-26T00:08:11.264827Z"
+                writerId: 4mxf3i7u3bgfjh8covn3u1fsbowflxjs
+        m: []
+        python_version: 3.11.15
+        t:
+            "1":
+                - 1
+                - 41
+                - 43
+            "2":
+                - 1
+                - 41
+                - 43
+            "3":
+                - 13
+                - 16
+                - 61
+            "4": 3.11.15
+            "5": 0.28.0
+            "12": 0.28.0
+            "13": linux-x86_64
+cfg:
+    value:
+        BCNET:
+            DATA_ROOT: data/cocoa-cls
+            HEAD:
+                USE_BOUNDARY: true
+                USE_GCN: true
+            LOSS:
+                OCCLUDEE_BOUNDARY_WEIGHT: 0.5
+                OCCLUDEE_MASK_WEIGHT: 1
+                OCCLUDER_BOUNDARY_WEIGHT: 0.5
+                OCCLUDER_MASK_WEIGHT: 1
+            TRAIN_DATASET_NAME: cocoa_train
+            TRAIN_IMG_DIR: data/cocoa-cls/train2014
+            TRAIN_JSON: data/cocoa-cls/annotations/cocoa_train2014_with_occluder.json
+            VAL_DATASET_NAME: cocoa_val
+            VAL_IMG_DIR: data/cocoa-cls/val2014
+            VAL_JSON: data/cocoa-cls/annotations/cocoa_val2014_with_occluder.json
+            VISIBLE_EVAL_DATASET_NAME: cocoa_val_visible_eval
+            VISIBLE_EVAL_IMG_DIR: data/cocoa-cls/val2014
+            VISIBLE_EVAL_JSON: data/cocoa-cls/annotations/cocoa_val2014_visible_eval.json
+        CUDNN_BENCHMARK: false
+        DATALOADER:
+            ASPECT_RATIO_GROUPING: true
+            FILTER_EMPTY_ANNOTATIONS: true
+            NUM_WORKERS: 4
+            REPEAT_SQRT: true
+            REPEAT_THRESHOLD: 0
+            SAMPLER_TRAIN: TrainingSampler
+        DATASETS:
+            PRECOMPUTED_PROPOSAL_TOPK_TEST: 1000
+            PRECOMPUTED_PROPOSAL_TOPK_TRAIN: 2000
+            PROPOSAL_FILES_TEST: []
+            PROPOSAL_FILES_TRAIN: []
+            TEST:
+                - cocoa_val_visible_eval
+            TRAIN:
+                - cocoa_train
+        FLOAT32_PRECISION: ""
+        GLOBAL:
+            HACK: 1
+        INPUT:
+            CROP:
+                ENABLED: false
+                SIZE:
+                    - 0.9
+                    - 0.9
+                TYPE: relative_range
+            FORMAT: BGR
+            MASK_FORMAT: bitmask
+            MAX_SIZE_TEST: 1333
+            MAX_SIZE_TRAIN: 1333
+            MIN_SIZE_TEST: 800
+            MIN_SIZE_TRAIN:
+                - 640
+                - 672
+                - 704
+                - 736
+                - 768
+                - 800
+            MIN_SIZE_TRAIN_SAMPLING: choice
+            RANDOM_FLIP: horizontal
+        MODEL:
+            ANCHOR_GENERATOR:
+                ANGLES:
+                    - - -90
+                      - 0
+                      - 90
+                ASPECT_RATIOS:
+                    - - 0.5
+                      - 1
+                      - 2
+                NAME: DefaultAnchorGenerator
+                OFFSET: 0
+                SIZES:
+                    - - 32
+                    - - 64
+                    - - 128
+                    - - 256
+                    - - 512
+            BACKBONE:
+                FREEZE_AT: 2
+                NAME: build_resnet_fpn_backbone
+            DEVICE: cuda
+            FPN:
+                FUSE_TYPE: sum
+                IN_FEATURES:
+                    - res2
+                    - res3
+                    - res4
+                    - res5
+                NORM: ""
+                OUT_CHANNELS: 256
+            KEYPOINT_ON: false
+            LOAD_PROPOSALS: false
+            MASK_ON: true
+            META_ARCHITECTURE: GeneralizedRCNN
+            PANOPTIC_FPN:
+                COMBINE:
+                    ENABLED: true
+                    INSTANCES_CONFIDENCE_THRESH: 0.5
+                    OVERLAP_THRESH: 0.5
+                    STUFF_AREA_LIMIT: 4096
+                INSTANCE_LOSS_WEIGHT: 1
+            PIXEL_MEAN:
+                - 103.53
+                - 116.28
+                - 123.675
+            PIXEL_STD:
+                - 1
+                - 1
+                - 1
+            PROPOSAL_GENERATOR:
+                MIN_SIZE: 0
+                NAME: RPN
+            RESNETS:
+                DEFORM_MODULATED: false
+                DEFORM_NUM_GROUPS: 1
+                DEFORM_ON_PER_STAGE:
+                    - false
+                    - false
+                    - false
+                    - false
+                DEPTH: 50
+                NORM: FrozenBN
+                NUM_GROUPS: 1
+                OUT_FEATURES:
+                    - res2
+                    - res3
+                    - res4
+                    - res5
+                RES2_OUT_CHANNELS: 256
+                RES5_DILATION: 1
+                STEM_OUT_CHANNELS: 64
+                STRIDE_IN_1X1: true
+                WIDTH_PER_GROUP: 64
+            RETINANET:
+                BBOX_REG_LOSS_TYPE: smooth_l1
+                BBOX_REG_WEIGHTS:
+                    - 1
+                    - 1
+                    - 1
+                    - 1
+                FOCAL_LOSS_ALPHA: 0.25
+                FOCAL_LOSS_GAMMA: 2
+                IN_FEATURES:
+                    - p3
+                    - p4
+                    - p5
+                    - p6
+                    - p7
+                IOU_LABELS:
+                    - 0
+                    - -1
+                    - 1
+                IOU_THRESHOLDS:
+                    - 0.4
+                    - 0.5
+                NMS_THRESH_TEST: 0.5
+                NORM: ""
+                NUM_CLASSES: 80
+                NUM_CONVS: 4
+                PRIOR_PROB: 0.01
+                SCORE_THRESH_TEST: 0.05
+                SMOOTH_L1_LOSS_BETA: 0.1
+                TOPK_CANDIDATES_TEST: 1000
+            ROI_BOX_CASCADE_HEAD:
+                BBOX_REG_WEIGHTS:
+                    - - 10
+                      - 10
+                      - 5
+                      - 5
+                    - - 20
+                      - 20
+                      - 10
+                      - 10
+                    - - 30
+                      - 30
+                      - 15
+                      - 15
+                IOUS:
+                    - 0.5
+                    - 0.6
+                    - 0.7
+            ROI_BOX_HEAD:
+                BBOX_REG_LOSS_TYPE: smooth_l1
+                BBOX_REG_LOSS_WEIGHT: 1
+                BBOX_REG_WEIGHTS:
+                    - 10
+                    - 10
+                    - 5
+                    - 5
+                CLS_AGNOSTIC_BBOX_REG: false
+                CONV_DIM: 256
+                FC_DIM: 1024
+                FED_LOSS_FREQ_WEIGHT_POWER: 0.5
+                FED_LOSS_NUM_CLASSES: 50
+                NAME: FastRCNNConvFCHead
+                NORM: ""
+                NUM_CONV: 0
+                NUM_FC: 2
+                POOLER_RESOLUTION: 7
+                POOLER_SAMPLING_RATIO: 0
+                POOLER_TYPE: ROIAlignV2
+                SMOOTH_L1_BETA: 0
+                TRAIN_ON_PRED_BOXES: false
+                USE_FED_LOSS: false
+                USE_SIGMOID_CE: false
+            ROI_HEADS:
+                BATCH_SIZE_PER_IMAGE: 128
+                IN_FEATURES:
+                    - p2
+                    - p3
+                    - p4
+                    - p5
+                IOU_LABELS:
+                    - 0
+                    - 1
+                IOU_THRESHOLDS:
+                    - 0.5
+                NAME: StandardROIHeads
+                NMS_THRESH_TEST: 0.5
+                NUM_CLASSES: 80
+                POSITIVE_FRACTION: 0.25
+                PROPOSAL_APPEND_GT: true
+                SCORE_THRESH_TEST: 0.3
+            ROI_KEYPOINT_HEAD:
+                CONV_DIMS:
+                    - 512
+                    - 512
+                    - 512
+                    - 512
+                    - 512
+                    - 512
+                    - 512
+                    - 512
+                LOSS_WEIGHT: 1
+                MIN_KEYPOINTS_PER_IMAGE: 1
+                NAME: KRCNNConvDeconvUpsampleHead
+                NORMALIZE_LOSS_BY_VISIBLE_KEYPOINTS: true
+                NUM_KEYPOINTS: 17
+                POOLER_RESOLUTION: 14
+                POOLER_SAMPLING_RATIO: 0
+                POOLER_TYPE: ROIAlignV2
+            ROI_MASK_HEAD:
+                CLS_AGNOSTIC_MASK: true
+                CONV_DIM: 256
+                NAME: BCNetBilayerMaskHead
+                NORM: ""
+                NUM_CONV: 4
+                POOLER_RESOLUTION: 14
+                POOLER_SAMPLING_RATIO: 0
+                POOLER_TYPE: ROIAlignV2
+            RPN:
+                BATCH_SIZE_PER_IMAGE: 256
+                BBOX_REG_LOSS_TYPE: smooth_l1
+                BBOX_REG_LOSS_WEIGHT: 1
+                BBOX_REG_WEIGHTS:
+                    - 1
+                    - 1
+                    - 1
+                    - 1
+                BOUNDARY_THRESH: -1
+                CONV_DIMS:
+                    - -1
+                HEAD_NAME: StandardRPNHead
+                IN_FEATURES:
+                    - p2
+                    - p3
+                    - p4
+                    - p5
+                    - p6
+                IOU_LABELS:
+                    - 0
+                    - -1
+                    - 1
+                IOU_THRESHOLDS:
+                    - 0.3
+                    - 0.7
+                LOSS_WEIGHT: 1
+                NMS_THRESH: 0.7
+                POSITIVE_FRACTION: 0.5
+                POST_NMS_TOPK_TEST: 500
+                POST_NMS_TOPK_TRAIN: 1000
+                PRE_NMS_TOPK_TEST: 1000
+                PRE_NMS_TOPK_TRAIN: 2000
+                SMOOTH_L1_BETA: 0
+            SEM_SEG_HEAD:
+                COMMON_STRIDE: 4
+                CONVS_DIM: 128
+                IGNORE_VALUE: 255
+                IN_FEATURES:
+                    - p2
+                    - p3
+                    - p4
+                    - p5
+                LOSS_WEIGHT: 1
+                NAME: SemSegFPNHead
+                NORM: GN
+                NUM_CLASSES: 54
+            WEIGHTS: detectron2://ImageNetPretrained/MSRA/R-50.pkl
+        OUTPUT_DIR: ./output/smoke
+        SEED: -1
+        SOLVER:
+            AMP:
+                ENABLED: true
+            BASE_LR: 0.0025
+            BASE_LR_END: 0
+            BIAS_LR_FACTOR: 1
+            CHECKPOINT_PERIOD: 100
+            CLIP_GRADIENTS:
+                CLIP_TYPE: norm
+                CLIP_VALUE: 1
+                ENABLED: true
+                NORM_TYPE: 2
+            GAMMA: 0.1
+            IMS_PER_BATCH: 2
+            LR_SCHEDULER_NAME: WarmupMultiStepLR
+            MAX_ITER: 100
+            MOMENTUM: 0.9
+            NESTEROV: false
+            NUM_DECAYS: 3
+            REFERENCE_WORLD_SIZE: 0
+            RESCALE_INTERVAL: false
+            STEPS: []
+            WARMUP_FACTOR: 0.01
+            WARMUP_ITERS: 20
+            WARMUP_METHOD: linear
+            WEIGHT_DECAY: 0.0001
+            WEIGHT_DECAY_BIAS: null
+            WEIGHT_DECAY_NORM: 0
+        TEST:
+            AUG:
+                ENABLED: false
+                FLIP: true
+                MAX_SIZE: 4000
+                MIN_SIZES:
+                    - 400
+                    - 500
+                    - 600
+                    - 700
+                    - 800
+                    - 900
+                    - 1000
+                    - 1100
+                    - 1200
+            DETECTIONS_PER_IMAGE: 100
+            EVAL_PERIOD: 0
+            EXPECTED_RESULTS: []
+            KEYPOINT_OKS_SIGMAS: []
+            PRECISE_BN:
+                ENABLED: false
+                NUM_ITER: 200
+        VERSION: 2
+        VIS_PERIOD: 0
+        WANDB:
+            ENABLED: true
+            ENTITY: yana-zhang-uhh
+            GROUP: full-cocoa-compare
+            NOTES: ""
+            PROJECT: Occluded-Object-Detection-using-Neural-Networks-BCNet-
+            RUN_NAME: smoke_wandb_test
+            TAGS: []

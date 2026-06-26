@@ -1,0 +1,828 @@
+[32m[06/26 02:08:13 d2.engine.defaults]: [0mModel:
+GeneralizedRCNN(
+  (backbone): FPN(
+    (fpn_lateral2): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral3): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral4): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (fpn_lateral5): Conv2d(2048, 256, kernel_size=(1, 1), stride=(1, 1))
+    (fpn_output5): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (top_block): LastLevelMaxPool()
+    (bottom_up): ResNet(
+      (stem): BasicStem(
+        (conv1): Conv2d(
+          3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
+          (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+        )
+      )
+      (res2): Sequential(
+        (0): BottleneckBlock(
+          (shortcut): Conv2d(
+            64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv1): Conv2d(
+            64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+        )
+        (1): BottleneckBlock(
+          (conv1): Conv2d(
+            256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+        )
+        (2): BottleneckBlock(
+          (conv1): Conv2d(
+            256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=64, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+        )
+      )
+      (res3): Sequential(
+        (0): BottleneckBlock(
+          (shortcut): Conv2d(
+            256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv1): Conv2d(
+            256, 128, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+        )
+        (1): BottleneckBlock(
+          (conv1): Conv2d(
+            512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+        )
+        (2): BottleneckBlock(
+          (conv1): Conv2d(
+            512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+        )
+        (3): BottleneckBlock(
+          (conv1): Conv2d(
+            512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=128, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+        )
+      )
+      (res4): Sequential(
+        (0): BottleneckBlock(
+          (shortcut): Conv2d(
+            512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+          (conv1): Conv2d(
+            512, 256, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (1): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (2): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (3): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (4): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+        (5): BottleneckBlock(
+          (conv1): Conv2d(
+            1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=256, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=1024, eps=1e-05)
+          )
+        )
+      )
+      (res5): Sequential(
+        (0): BottleneckBlock(
+          (shortcut): Conv2d(
+            1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+          )
+          (conv1): Conv2d(
+            1024, 512, kernel_size=(1, 1), stride=(2, 2), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+          )
+        )
+        (1): BottleneckBlock(
+          (conv1): Conv2d(
+            2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+          )
+        )
+        (2): BottleneckBlock(
+          (conv1): Conv2d(
+            2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv2): Conv2d(
+            512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=512, eps=1e-05)
+          )
+          (conv3): Conv2d(
+            512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False
+            (norm): FrozenBatchNorm2d(num_features=2048, eps=1e-05)
+          )
+        )
+      )
+    )
+  )
+  (proposal_generator): RPN(
+    (rpn_head): StandardRPNHead(
+      (conv): Conv2d(
+        256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+        (activation): ReLU()
+      )
+      (objectness_logits): Conv2d(256, 3, kernel_size=(1, 1), stride=(1, 1))
+      (anchor_deltas): Conv2d(256, 12, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (anchor_generator): DefaultAnchorGenerator(
+      (cell_anchors): BufferList()
+    )
+  )
+  (roi_heads): StandardROIHeads(
+    (box_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(7, 7), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(7, 7), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(7, 7), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(7, 7), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (box_head): FastRCNNConvFCHead(
+      (flatten): Flatten(start_dim=1, end_dim=-1)
+      (fc1): Linear(in_features=12544, out_features=1024, bias=True)
+      (fc_relu1): ReLU()
+      (fc2): Linear(in_features=1024, out_features=1024, bias=True)
+      (fc_relu2): ReLU()
+    )
+    (box_predictor): FastRCNNOutputLayers(
+      (cls_score): Linear(in_features=1024, out_features=81, bias=True)
+      (bbox_pred): Linear(in_features=1024, out_features=320, bias=True)
+    )
+    (mask_pooler): ROIPooler(
+      (level_poolers): ModuleList(
+        (0): ROIAlign(output_size=(14, 14), spatial_scale=0.25, sampling_ratio=0, aligned=True)
+        (1): ROIAlign(output_size=(14, 14), spatial_scale=0.125, sampling_ratio=0, aligned=True)
+        (2): ROIAlign(output_size=(14, 14), spatial_scale=0.0625, sampling_ratio=0, aligned=True)
+        (3): ROIAlign(output_size=(14, 14), spatial_scale=0.03125, sampling_ratio=0, aligned=True)
+      )
+    )
+    (mask_head): BCNetBilayerMaskHead(
+      (occ_convs): ModuleList(
+        (0-3): 4 x Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+      )
+      (occ_gcn): GCNBlock(
+        (theta): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (phi): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (g): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (W): Conv2d(128, 256, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (occ_deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+      (occ_deconv_relu): ReLU()
+      (occ_predictor): Conv2d(256, 1, kernel_size=(1, 1), stride=(1, 1))
+      (tgt_convs): ModuleList(
+        (0-3): 4 x Conv2d(
+          256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1)
+          (activation): ReLU()
+        )
+      )
+      (tgt_gcn): GCNBlock(
+        (theta): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (phi): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (g): Conv2d(256, 128, kernel_size=(1, 1), stride=(1, 1))
+        (W): Conv2d(128, 256, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (tgt_deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+      (tgt_deconv_relu): ReLU()
+      (tgt_predictor): Conv2d(256, 1, kernel_size=(1, 1), stride=(1, 1))
+      (occ_boundary_deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+      (occ_boundary_deconv_relu): ReLU()
+      (occ_boundary_predictor): Conv2d(256, 1, kernel_size=(1, 1), stride=(1, 1))
+      (tgt_boundary_deconv): ConvTranspose2d(256, 256, kernel_size=(2, 2), stride=(2, 2))
+      (tgt_boundary_deconv_relu): ReLU()
+      (tgt_boundary_predictor): Conv2d(256, 1, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+)
+[32m[06/26 02:08:13 d2.data.dataset_mapper]: [0m[DatasetMapper] Augmentations used in training: [ResizeShortestEdge(short_edge_length=(640, 672, 704, 736, 768, 800), max_size=1333, sample_style='choice'), RandomFlip()]
+[32m[06/26 02:08:13 d2.data.datasets.coco]: [0mLoaded 2276 images in COCO format from /data/5zhang/BCNet/data/cocoa-cls/annotations/cocoa_train2014_with_occluder.json
+[32m[06/26 02:08:13 d2.data.build]: [0mRemoved 0 images with no usable annotations. 2276 images left.
+[32m[06/26 02:08:13 d2.data.build]: [0mDistribution of instances among all 80 categories:
+[36m|   category    | #instances   |   category   | #instances   |   category    | #instances   |
+|:-------------:|:-------------|:------------:|:-------------|:-------------:|:-------------|
+|    person     | 2311         |   bicycle    | 21           |      car      | 279          |
+|  motorcycle   | 47           |   airplane   | 65           |      bus      | 92           |
+|     train     | 60           |    truck     | 115          |     boat      | 79           |
+| traffic light | 13           | fire hydrant | 35           |   stop sign   | 12           |
+| parking meter | 10           |    bench     | 48           |     bird      | 57           |
+|      cat      | 94           |     dog      | 100          |     horse     | 57           |
+|     sheep     | 102          |     cow      | 91           |   elephant    | 80           |
+|     bear      | 28           |    zebra     | 84           |    giraffe    | 90           |
+|   backpack    | 14           |   umbrella   | 74           |    handbag    | 26           |
+|      tie      | 9            |   suitcase   | 77           |    frisbee    | 29           |
+|     skis      | 13           |  snowboard   | 21           |  sports ball  | 36           |
+|     kite      | 49           | baseball bat | 33           | baseball gl.. | 5            |
+|  skateboard   | 41           |  surfboard   | 37           | tennis racket | 49           |
+|    bottle     | 222          |  wine glass  | 70           |      cup      | 215          |
+|     fork      | 25           |    knife     | 69           |     spoon     | 33           |
+|     bowl      | 161          |    banana    | 26           |     apple     | 34           |
+|   sandwich    | 33           |    orange    | 31           |   broccoli    | 9            |
+|    carrot     | 19           |   hot dog    | 27           |     pizza     | 60           |
+|     donut     | 70           |     cake     | 76           |     chair     | 195          |
+|     couch     | 55           | potted plant | 12           |      bed      | 26           |
+| dining table  | 34           |    toilet    | 80           |      tv       | 91           |
+|    laptop     | 74           |    mouse     | 25           |    remote     | 28           |
+|   keyboard    | 36           |  cell phone  | 38           |   microwave   | 33           |
+|     oven      | 23           |   toaster    | 5            |     sink      | 53           |
+| refrigerator  | 63           |     book     | 59           |     clock     | 39           |
+|     vase      | 45           |   scissors   | 8            |  teddy bear   | 68           |
+|  hair drier   | 0            |  toothbrush  | 10           |               |              |
+|     total     | 6763         |              |              |               |              |[0m
+[32m[06/26 02:08:13 d2.data.build]: [0mUsing training sampler TrainingSampler
+[32m[06/26 02:08:13 d2.data.common]: [0mSerializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[32m[06/26 02:08:13 d2.data.common]: [0mSerializing 2276 elements to byte tensors and concatenating them all ...
+[32m[06/26 02:08:13 d2.data.common]: [0mSerialized dataset takes 9.21 MiB
+[32m[06/26 02:08:13 d2.data.build]: [0mMaking batched data loader with batch_size=2
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:471: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  grad_scaler = GradScaler()
+[32m[06/26 02:08:13 d2.checkpoint.detection_checkpoint]: [0m[DetectionCheckpointer] Loading from detectron2://ImageNetPretrained/MSRA/R-50.pkl ...
+[32m[06/26 02:08:13 fvcore.common.checkpoint]: [0m[Checkpointer] Loading from /export/home/5zhang/.torch/iopath_cache/detectron2/ImageNetPretrained/MSRA/R-50.pkl ...
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/checkpoint/detection_checkpoint.py:73: VisibleDeprecationWarning: dtype(): align should be passed as Python or NumPy boolean but got `align=0`. Did you mean to pass a tuple to create a subarray type? (Deprecated NumPy 2.4)
+  data = pickle.load(f, encoding="latin1")
+[32m[06/26 02:08:13 d2.checkpoint.c2_model_loading]: [0mRenaming Caffe2 weights ......
+[32m[06/26 02:08:14 d2.checkpoint.c2_model_loading]: [0mFollowing weights matched with submodule backbone.bottom_up - Total num: 54
+[5m[31mWARNING[0m [32m[06/26 02:08:14 fvcore.common.checkpoint]: [0mSome model parameters or buffers are not found in the checkpoint:
+[34mbackbone.fpn_lateral2.{bias, weight}[0m
+[34mbackbone.fpn_lateral3.{bias, weight}[0m
+[34mbackbone.fpn_lateral4.{bias, weight}[0m
+[34mbackbone.fpn_lateral5.{bias, weight}[0m
+[34mbackbone.fpn_output2.{bias, weight}[0m
+[34mbackbone.fpn_output3.{bias, weight}[0m
+[34mbackbone.fpn_output4.{bias, weight}[0m
+[34mbackbone.fpn_output5.{bias, weight}[0m
+[34mproposal_generator.rpn_head.anchor_deltas.{bias, weight}[0m
+[34mproposal_generator.rpn_head.conv.{bias, weight}[0m
+[34mproposal_generator.rpn_head.objectness_logits.{bias, weight}[0m
+[34mroi_heads.box_head.fc1.{bias, weight}[0m
+[34mroi_heads.box_head.fc2.{bias, weight}[0m
+[34mroi_heads.box_predictor.bbox_pred.{bias, weight}[0m
+[34mroi_heads.box_predictor.cls_score.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_boundary_deconv.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_boundary_predictor.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_convs.0.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_convs.1.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_convs.2.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_convs.3.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_deconv.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_gcn.W.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_gcn.g.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_gcn.phi.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_gcn.theta.{bias, weight}[0m
+[34mroi_heads.mask_head.occ_predictor.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_boundary_deconv.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_boundary_predictor.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_convs.0.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_convs.1.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_convs.2.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_convs.3.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_deconv.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_gcn.W.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_gcn.g.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_gcn.phi.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_gcn.theta.{bias, weight}[0m
+[34mroi_heads.mask_head.tgt_predictor.{bias, weight}[0m
+[5m[31mWARNING[0m [32m[06/26 02:08:14 fvcore.common.checkpoint]: [0mThe checkpoint state_dict contains keys that are not used by the model:
+  [35mfc1000.{bias, weight}[0m
+  [35mstem.conv1.bias[0m
+[32m[06/26 02:08:14 d2.engine.train_loop]: [0mStarting training from iteration 0
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/torch/functional.py:539: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /pytorch/aten/src/ATen/native/TensorShape.cpp:3637.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:227: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn(
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+[32m[06/26 02:08:22 d2.utils.events]: [0m eta: 0:00:28  iter: 19  total_loss: 7.287  loss_cls: 4.062  loss_box_reg: 0.03402  loss_mask: 0.6945  loss_occluder_mask: 0.6256  loss_occludee_boundary: 0.6348  loss_occluder_boundary: 0.5929  loss_rpn_cls: 0.6705  loss_rpn_loc: 0.02313    time: 0.3659  last_time: 0.3575  data_time: 0.0176  last_data_time: 0.0053   lr: 0.0023762  max_mem: 2070M
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+[32m[06/26 02:08:30 d2.utils.events]: [0m eta: 0:00:22  iter: 39  total_loss: 2.788  loss_cls: 0.7789  loss_box_reg: 0.3064  loss_mask: 0.6895  loss_occluder_mask: 0.0567  loss_occludee_boundary: 0.5702  loss_occluder_boundary: 0.05255  loss_rpn_cls: 0.07318  loss_rpn_loc: 0.02778    time: 0.3753  last_time: 0.3909  data_time: 0.0086  last_data_time: 0.0098   lr: 0.0025  max_mem: 2483M
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+[32m[06/26 02:08:38 d2.utils.events]: [0m eta: 0:00:15  iter: 59  total_loss: 3.532  loss_cls: 1.181  loss_box_reg: 0.6359  loss_mask: 0.6912  loss_occluder_mask: 0.1078  loss_occludee_boundary: 0.5379  loss_occluder_boundary: 0.1523  loss_rpn_cls: 0.1059  loss_rpn_loc: 0.03578    time: 0.3796  last_time: 0.3705  data_time: 0.0102  last_data_time: 0.0136   lr: 0.0025  max_mem: 2541M
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+[32m[06/26 02:08:45 d2.utils.events]: [0m eta: 0:00:07  iter: 79  total_loss: 2.8  loss_cls: 0.6754  loss_box_reg: 0.5255  loss_mask: 0.6825  loss_occluder_mask: 0.0433  loss_occludee_boundary: 0.5619  loss_occluder_boundary: 0.05683  loss_rpn_cls: 0.06674  loss_rpn_loc: 0.02358    time: 0.3779  last_time: 0.3650  data_time: 0.0086  last_data_time: 0.0074   lr: 0.0025  max_mem: 2541M
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+/data/5zhang/envs/bcn_server/lib/python3.11/site-packages/detectron2/engine/train_loop.py:490: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with autocast(dtype=self.precision):
+[32m[06/26 02:08:53 fvcore.common.checkpoint]: [0mSaving checkpoint to ./output/smoke/model_0000099.pth
+[32m[06/26 02:08:56 fvcore.common.checkpoint]: [0mSaving checkpoint to ./output/smoke/model_final.pth
+[32m[06/26 02:08:59 d2.utils.events]: [0m eta: 0:00:00  iter: 99  total_loss: 2.985  loss_cls: 0.7666  loss_box_reg: 0.5878  loss_mask: 0.6652  loss_occluder_mask: 0.06616  loss_occludee_boundary: 0.5412  loss_occluder_boundary: 0.1156  loss_rpn_cls: 0.06548  loss_rpn_loc: 0.02576    time: 0.3779  last_time: 0.4213  data_time: 0.0085  last_data_time: 0.0084   lr: 0.0025  max_mem: 2541M
+[32m[06/26 02:09:00 d2.engine.hooks]: [0mOverall training speed: 98 iterations in 0:00:37 (0.3779 s / it)
+[32m[06/26 02:09:00 d2.engine.hooks]: [0mTotal training time: 0:00:44 (0:00:07 on hooks)
+[32m[06/26 02:09:00 d2.data.datasets.coco]: [0mLoaded 1223 images in COCO format from /data/5zhang/BCNet/data/cocoa-cls/annotations/cocoa_val2014_visible_eval.json
+[32m[06/26 02:09:00 d2.data.build]: [0mDistribution of instances among all 80 categories:
+[36m|   category    | #instances   |   category   | #instances   |   category    | #instances   |
+|:-------------:|:-------------|:------------:|:-------------|:-------------:|:-------------|
+|    person     | 1197         |   bicycle    | 12           |      car      | 154          |
+|  motorcycle   | 31           |   airplane   | 39           |      bus      | 44           |
+|     train     | 42           |    truck     | 44           |     boat      | 49           |
+| traffic light | 7            | fire hydrant | 17           |   stop sign   | 9            |
+| parking meter | 2            |    bench     | 34           |     bird      | 42           |
+|      cat      | 42           |     dog      | 62           |     horse     | 48           |
+|     sheep     | 49           |     cow      | 56           |   elephant    | 43           |
+|     bear      | 11           |    zebra     | 41           |    giraffe    | 31           |
+|   backpack    | 12           |   umbrella   | 73           |    handbag    | 24           |
+|      tie      | 23           |   suitcase   | 42           |    frisbee    | 27           |
+|     skis      | 9            |  snowboard   | 9            |  sports ball  | 14           |
+|     kite      | 32           | baseball bat | 18           | baseball gl.. | 12           |
+|  skateboard   | 16           |  surfboard   | 14           | tennis racket | 38           |
+|    bottle     | 91           |  wine glass  | 26           |      cup      | 141          |
+|     fork      | 19           |    knife     | 26           |     spoon     | 22           |
+|     bowl      | 51           |    banana    | 20           |     apple     | 19           |
+|   sandwich    | 28           |    orange    | 17           |   broccoli    | 16           |
+|    carrot     | 10           |   hot dog    | 23           |     pizza     | 60           |
+|     donut     | 54           |     cake     | 33           |     chair     | 127          |
+|     couch     | 26           | potted plant | 15           |      bed      | 12           |
+| dining table  | 32           |    toilet    | 45           |      tv       | 53           |
+|    laptop     | 52           |    mouse     | 23           |    remote     | 18           |
+|   keyboard    | 28           |  cell phone  | 31           |   microwave   | 8            |
+|     oven      | 11           |   toaster    | 2            |     sink      | 24           |
+| refrigerator  | 13           |     book     | 23           |     clock     | 33           |
+|     vase      | 42           |   scissors   | 12           |  teddy bear   | 41           |
+|  hair drier   | 1            |  toothbrush  | 2            |               |              |
+|     total     | 3799         |              |              |               |              |[0m
+[32m[06/26 02:09:00 d2.data.dataset_mapper]: [0m[DatasetMapper] Augmentations used in inference: [ResizeShortestEdge(short_edge_length=(800, 800), max_size=1333, sample_style='choice')]
+[32m[06/26 02:09:00 d2.data.common]: [0mSerializing the dataset using: <class 'detectron2.data.common._TorchSerializedList'>
+[32m[06/26 02:09:00 d2.data.common]: [0mSerializing 1223 elements to byte tensors and concatenating them all ...
+[32m[06/26 02:09:00 d2.data.common]: [0mSerialized dataset takes 2.34 MiB
+[32m[06/26 02:09:00 d2.evaluation.evaluator]: [0mStart inference on 1223 batches
+[32m[06/26 02:09:01 d2.evaluation.evaluator]: [0mInference done 11/1223. Dataloading: 0.0010 s/iter. Inference: 0.0653 s/iter. Eval: 0.0002 s/iter. Total: 0.0666 s/iter. ETA=0:01:20
+[32m[06/26 02:09:06 d2.evaluation.evaluator]: [0mInference done 85/1223. Dataloading: 0.0014 s/iter. Inference: 0.0667 s/iter. Eval: 0.0002 s/iter. Total: 0.0684 s/iter. ETA=0:01:17
+[32m[06/26 02:09:11 d2.evaluation.evaluator]: [0mInference done 160/1223. Dataloading: 0.0014 s/iter. Inference: 0.0660 s/iter. Eval: 0.0002 s/iter. Total: 0.0677 s/iter. ETA=0:01:11
+[32m[06/26 02:09:16 d2.evaluation.evaluator]: [0mInference done 236/1223. Dataloading: 0.0014 s/iter. Inference: 0.0654 s/iter. Eval: 0.0003 s/iter. Total: 0.0672 s/iter. ETA=0:01:06
+[32m[06/26 02:09:21 d2.evaluation.evaluator]: [0mInference done 311/1223. Dataloading: 0.0014 s/iter. Inference: 0.0653 s/iter. Eval: 0.0003 s/iter. Total: 0.0671 s/iter. ETA=0:01:01
+[32m[06/26 02:09:26 d2.evaluation.evaluator]: [0mInference done 386/1223. Dataloading: 0.0014 s/iter. Inference: 0.0653 s/iter. Eval: 0.0003 s/iter. Total: 0.0670 s/iter. ETA=0:00:56
+[32m[06/26 02:09:31 d2.evaluation.evaluator]: [0mInference done 460/1223. Dataloading: 0.0014 s/iter. Inference: 0.0653 s/iter. Eval: 0.0003 s/iter. Total: 0.0671 s/iter. ETA=0:00:51
+[32m[06/26 02:09:36 d2.evaluation.evaluator]: [0mInference done 534/1223. Dataloading: 0.0014 s/iter. Inference: 0.0655 s/iter. Eval: 0.0003 s/iter. Total: 0.0673 s/iter. ETA=0:00:46
+[32m[06/26 02:09:41 d2.evaluation.evaluator]: [0mInference done 609/1223. Dataloading: 0.0014 s/iter. Inference: 0.0655 s/iter. Eval: 0.0003 s/iter. Total: 0.0673 s/iter. ETA=0:00:41
+[32m[06/26 02:09:46 d2.evaluation.evaluator]: [0mInference done 685/1223. Dataloading: 0.0014 s/iter. Inference: 0.0654 s/iter. Eval: 0.0003 s/iter. Total: 0.0672 s/iter. ETA=0:00:36
+[32m[06/26 02:09:51 d2.evaluation.evaluator]: [0mInference done 759/1223. Dataloading: 0.0014 s/iter. Inference: 0.0655 s/iter. Eval: 0.0003 s/iter. Total: 0.0673 s/iter. ETA=0:00:31
+[32m[06/26 02:09:56 d2.evaluation.evaluator]: [0mInference done 833/1223. Dataloading: 0.0014 s/iter. Inference: 0.0655 s/iter. Eval: 0.0003 s/iter. Total: 0.0673 s/iter. ETA=0:00:26
+[32m[06/26 02:10:01 d2.evaluation.evaluator]: [0mInference done 907/1223. Dataloading: 0.0014 s/iter. Inference: 0.0656 s/iter. Eval: 0.0003 s/iter. Total: 0.0674 s/iter. ETA=0:00:21
+[32m[06/26 02:10:06 d2.evaluation.evaluator]: [0mInference done 983/1223. Dataloading: 0.0014 s/iter. Inference: 0.0655 s/iter. Eval: 0.0003 s/iter. Total: 0.0673 s/iter. ETA=0:00:16
+[32m[06/26 02:10:11 d2.evaluation.evaluator]: [0mInference done 1057/1223. Dataloading: 0.0014 s/iter. Inference: 0.0655 s/iter. Eval: 0.0003 s/iter. Total: 0.0674 s/iter. ETA=0:00:11
+[32m[06/26 02:10:16 d2.evaluation.evaluator]: [0mInference done 1133/1223. Dataloading: 0.0014 s/iter. Inference: 0.0655 s/iter. Eval: 0.0003 s/iter. Total: 0.0673 s/iter. ETA=0:00:06
+[32m[06/26 02:10:21 d2.evaluation.evaluator]: [0mInference done 1208/1223. Dataloading: 0.0014 s/iter. Inference: 0.0655 s/iter. Eval: 0.0003 s/iter. Total: 0.0673 s/iter. ETA=0:00:01
+[32m[06/26 02:10:22 d2.evaluation.evaluator]: [0mTotal inference time: 0:01:21.924991 (0.067262 s / iter per device, on 1 devices)
+[32m[06/26 02:10:22 d2.evaluation.evaluator]: [0mTotal inference pure compute time: 0:01:19 (0.065406 s / iter per device, on 1 devices)
+[32m[06/26 02:10:22 d2.evaluation.coco_evaluation]: [0mPreparing results for COCO format ...
+[32m[06/26 02:10:22 d2.evaluation.coco_evaluation]: [0mSaving results to output/smoke/eval/cocoa_val_visible_eval/coco_instances_results.json
+[32m[06/26 02:10:22 d2.evaluation.coco_evaluation]: [0mEvaluating predictions with unofficial COCO API...
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+[32m[06/26 02:10:22 d2.evaluation.fast_eval_api]: [0mEvaluate annotation type *bbox*
+[32m[06/26 02:10:24 d2.evaluation.fast_eval_api]: [0mCOCOeval_opt.evaluate() finished in 2.02 seconds.
+[32m[06/26 02:10:24 d2.evaluation.fast_eval_api]: [0mAccumulating evaluation results...
+[32m[06/26 02:10:25 d2.evaluation.fast_eval_api]: [0mCOCOeval_opt.accumulate() finished in 0.25 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+[32m[06/26 02:10:25 d2.evaluation.coco_evaluation]: [0mEvaluation results for bbox:
+|  AP   |  AP50  |  AP75  |  APs  |  APm  |  APl  |
+|:-----:|:------:|:------:|:-----:|:-----:|:-----:|
+| 0.001 | 0.003  | 0.000  | 0.000 | 0.001 | 0.001 |
+[32m[06/26 02:10:25 d2.evaluation.coco_evaluation]: [0mPer-category bbox AP:
+| category      | AP    | category     | AP    | category       | AP    |
+|:--------------|:------|:-------------|:------|:---------------|:------|
+| person        | 0.058 | bicycle      | 0.000 | car            | 0.000 |
+| motorcycle    | 0.000 | airplane     | 0.000 | bus            | 0.000 |
+| train         | 0.000 | truck        | 0.000 | boat           | 0.000 |
+| traffic light | 0.000 | fire hydrant | 0.000 | stop sign      | 0.000 |
+| parking meter | 0.000 | bench        | 0.000 | bird           | 0.000 |
+| cat           | 0.000 | dog          | 0.000 | horse          | 0.000 |
+| sheep         | 0.000 | cow          | 0.000 | elephant       | 0.000 |
+| bear          | 0.000 | zebra        | 0.000 | giraffe        | 0.000 |
+| backpack      | 0.000 | umbrella     | 0.000 | handbag        | 0.000 |
+| tie           | 0.000 | suitcase     | 0.000 | frisbee        | 0.000 |
+| skis          | 0.000 | snowboard    | 0.000 | sports ball    | 0.000 |
+| kite          | 0.000 | baseball bat | 0.000 | baseball glove | 0.000 |
+| skateboard    | 0.000 | surfboard    | 0.000 | tennis racket  | 0.000 |
+| bottle        | 0.000 | wine glass   | 0.000 | cup            | 0.000 |
+| fork          | 0.000 | knife        | 0.000 | spoon          | 0.000 |
+| bowl          | 0.000 | banana       | 0.000 | apple          | 0.000 |
+| sandwich      | 0.000 | orange       | 0.000 | broccoli       | 0.000 |
+| carrot        | 0.000 | hot dog      | 0.000 | pizza          | 0.000 |
+| donut         | 0.000 | cake         | 0.000 | chair          | 0.000 |
+| couch         | 0.000 | potted plant | 0.000 | bed            | 0.000 |
+| dining table  | 0.000 | toilet       | 0.000 | tv             | 0.000 |
+| laptop        | 0.000 | mouse        | 0.000 | remote         | 0.000 |
+| keyboard      | 0.000 | cell phone   | 0.000 | microwave      | 0.000 |
+| oven          | 0.000 | toaster      | 0.000 | sink           | 0.000 |
+| refrigerator  | 0.000 | book         | 0.000 | clock          | 0.000 |
+| vase          | 0.000 | scissors     | 0.000 | teddy bear     | 0.000 |
+| hair drier    | 0.000 | toothbrush   | 0.000 |                |       |
+Loading and preparing results...
+DONE (t=0.01s)
+creating index...
+index created!
+[32m[06/26 02:10:25 d2.evaluation.fast_eval_api]: [0mEvaluate annotation type *segm*
+[32m[06/26 02:10:26 d2.evaluation.fast_eval_api]: [0mCOCOeval_opt.evaluate() finished in 1.80 seconds.
+[32m[06/26 02:10:26 d2.evaluation.fast_eval_api]: [0mAccumulating evaluation results...
+[32m[06/26 02:10:27 d2.evaluation.fast_eval_api]: [0mCOCOeval_opt.accumulate() finished in 0.26 seconds.
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+[32m[06/26 02:10:27 d2.evaluation.coco_evaluation]: [0mEvaluation results for segm:
+|  AP   |  AP50  |  AP75  |  APs  |  APm  |  APl  |
+|:-----:|:------:|:------:|:-----:|:-----:|:-----:|
+| 0.000 | 0.000  | 0.000  | 0.000 | 0.000 | 0.000 |
+[32m[06/26 02:10:27 d2.evaluation.coco_evaluation]: [0mPer-category segm AP:
+| category      | AP    | category     | AP    | category       | AP    |
+|:--------------|:------|:-------------|:------|:---------------|:------|
+| person        | 0.000 | bicycle      | 0.000 | car            | 0.000 |
+| motorcycle    | 0.000 | airplane     | 0.000 | bus            | 0.000 |
+| train         | 0.000 | truck        | 0.000 | boat           | 0.000 |
+| traffic light | 0.000 | fire hydrant | 0.000 | stop sign      | 0.000 |
+| parking meter | 0.000 | bench        | 0.000 | bird           | 0.000 |
+| cat           | 0.000 | dog          | 0.000 | horse          | 0.000 |
+| sheep         | 0.000 | cow          | 0.000 | elephant       | 0.000 |
+| bear          | 0.000 | zebra        | 0.000 | giraffe        | 0.000 |
+| backpack      | 0.000 | umbrella     | 0.000 | handbag        | 0.000 |
+| tie           | 0.000 | suitcase     | 0.000 | frisbee        | 0.000 |
+| skis          | 0.000 | snowboard    | 0.000 | sports ball    | 0.000 |
+| kite          | 0.000 | baseball bat | 0.000 | baseball glove | 0.000 |
+| skateboard    | 0.000 | surfboard    | 0.000 | tennis racket  | 0.000 |
+| bottle        | 0.000 | wine glass   | 0.000 | cup            | 0.000 |
+| fork          | 0.000 | knife        | 0.000 | spoon          | 0.000 |
+| bowl          | 0.000 | banana       | 0.000 | apple          | 0.000 |
+| sandwich      | 0.000 | orange       | 0.000 | broccoli       | 0.000 |
+| carrot        | 0.000 | hot dog      | 0.000 | pizza          | 0.000 |
+| donut         | 0.000 | cake         | 0.000 | chair          | 0.000 |
+| couch         | 0.000 | potted plant | 0.000 | bed            | 0.000 |
+| dining table  | 0.000 | toilet       | 0.000 | tv             | 0.000 |
+| laptop        | 0.000 | mouse        | 0.000 | remote         | 0.000 |
+| keyboard      | 0.000 | cell phone   | 0.000 | microwave      | 0.000 |
+| oven          | 0.000 | toaster      | 0.000 | sink           | 0.000 |
+| refrigerator  | 0.000 | book         | 0.000 | clock          | 0.000 |
+| vase          | 0.000 | scissors     | 0.000 | teddy bear     | 0.000 |
+| hair drier    | 0.000 | toothbrush   | 0.000 |                |       |
+[32m[06/26 02:10:27 d2.engine.defaults]: [0mEvaluation results for cocoa_val_visible_eval in csv format:
+[32m[06/26 02:10:27 d2.evaluation.testing]: [0mcopypaste: Task: bbox
+[32m[06/26 02:10:27 d2.evaluation.testing]: [0mcopypaste: AP,AP50,AP75,APs,APm,APl
+[32m[06/26 02:10:27 d2.evaluation.testing]: [0mcopypaste: 0.0007,0.0035,0.0000,0.0000,0.0013,0.0014
+[32m[06/26 02:10:27 d2.evaluation.testing]: [0mcopypaste: Task: segm
+[32m[06/26 02:10:27 d2.evaluation.testing]: [0mcopypaste: AP,AP50,AP75,APs,APm,APl
+[32m[06/26 02:10:27 d2.evaluation.testing]: [0mcopypaste: 0.0000,0.0000,0.0000,0.0000,0.0000,0.0000
