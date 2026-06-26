@@ -175,6 +175,8 @@ pip install -r requirements.txt
 
 # 3. detectron2 from source (matches the commit we developed against)
 pip install "git+https://github.com/facebookresearch/detectron2.git@b599f139756bd3646a26a909caf86a1a159e53a7"
+# if falls, try:
+pip install --no-build-isolation "git+https://github.com/facebookresearch/detectron2.git@b599f139756bd3646a26a909caf86a1a159e53a7"
 
 # 4. setuptools pin (detectron2.model_zoo imports pkg_resources)
 pip install "setuptools<81"

@@ -88,13 +88,15 @@ Install Miniconda **into `/data`** (the installer defaults to `$HOME` — overri
 ```bash
 cd $WORK
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-bash miniconda.sh -b -p $WORK/miniconda3
+bash miniconda.sh -b -u -p $WORK/miniconda3
 source $WORK/miniconda3/etc/profile.d/conda.sh
 ```
 
 Create the env with an explicit prefix on `/data`:
 
 ```bash
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 conda create -y -p $WORK/envs/bcn_server python=3.11
 conda activate $WORK/envs/bcn_server
 ```
@@ -113,6 +115,8 @@ pip install -r requirements.txt
 
 # 3. detectron2 from the exact commit we developed against
 pip install "git+https://github.com/facebookresearch/detectron2.git@b599f139756bd3646a26a909caf86a1a159e53a7"
+# if falls, try:
+pip install --no-build-isolation "git+https://github.com/facebookresearch/detectron2.git@b599f139756bd3646a26a909caf86a1a159e53a7"
 
 # 4. setuptools pin (detectron2.model_zoo imports pkg_resources, gone in setuptools 81)
 pip install "setuptools<81"
@@ -132,6 +136,10 @@ CUDA_VISIBLE_DEVICES=2 python -c "import torch; print(torch.__version__, torch.c
 Log in to W&B once (or `export WANDB_API_KEY=...`):
 
 ```bash
+# 1 
+pip install wandb
+
+# 2
 wandb login
 ```
 
@@ -145,6 +153,11 @@ wandb login
 cd $WORK/BCNet/data/cocoa-cls
 curl -O https://images.cocodataset.org/zips/train2014.zip   # ~13 GB
 curl -O https://images.cocodataset.org/zips/val2014.zip     # ~6.2 GB
+
+# Skip Certificate Validation
+curl -k -O https://images.cocodataset.org/zips/train2014.zip 
+curl -k -O https://images.cocodataset.org/zips/val2014.zip     
+
 unzip -q train2014.zip   # -> ./train2014/
 unzip -q val2014.zip     # -> ./val2014/
 rm train2014.zip val2014.zip    # reclaim ~19 GB once unzipped
@@ -182,16 +195,23 @@ A=data/cocoa-cls/annotations
 python tools/build_occluder_anns.py \
     --input  $A/COCO_amodal_train2014_with_classes.json \
     --output $A/cocoa_train2014_with_occluder.json
+#   annotations: 6763
+#   with non-empty occluder: 2137 (31.6%)
 
 # (2) Same for the VAL split (used for prediction visualization).
 python tools/build_occluder_anns.py \
     --input  $A/COCO_amodal_val2014_with_classes.json \
     --output $A/cocoa_val2014_with_occluder.json
+#   annotations: 3799
+#   with non-empty occluder: 1208 (31.8%)
+
 
 # (3) Build the visible-mask eval JSON COCOEvaluator scores against.
 python tools/build_eval_anns.py \
     --input  $A/cocoa_val2014_with_occluder.json \
     --output $A/cocoa_val2014_visible_eval.json
+#   annotations kept   : 3799
+#   annotations dropped: 0  (empty/missing visible mask)
 ```
 
 Detach with `Ctrl-b d`; reattach with `tmux attach -t prep`. Each script prints
@@ -216,7 +236,7 @@ python quick_check.py
 
 # (b) build the model + one forward + loss on a single batch
 CUDA_VISIBLE_DEVICES=2 python tools/check_forward.py
-
+[todo]
 # (c) 100-iter run on the FULL data (proves the big JSONs load + register and
 #     that the BCNet head fits in 11 GB). Watch VRAM in a second shell:
 #       watch -n 1 nvidia-smi

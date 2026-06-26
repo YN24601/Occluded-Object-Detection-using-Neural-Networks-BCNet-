@@ -46,11 +46,19 @@ DATALOADER:
 # ---------------------------------------------------------------------------
 SOLVER:
   IMS_PER_BATCH: 2
-  BASE_LR: 0.005           # linear scaling: 0.02 * 2/16 + a small bump
+  BASE_LR: 0.0025          # linear scaling 0.02 * 2/16; was 0.005, which diverged (Inf/NaN in RPN)
   MAX_ITER: 20000
   STEPS: (14000, 18000)
   WARMUP_ITERS: 1000
+  WARMUP_FACTOR: 0.01      # was default 0.001; start the LR ramp from a higher floor
   CHECKPOINT_PERIOD: 2500
+  # Guard against gradient spikes that blow trainable weights up to Inf/NaN
+  # (surfaces downstream as "Predicted boxes or scores contain Inf/NaN" in the RPN).
+  CLIP_GRADIENTS:
+    ENABLED: True
+    CLIP_TYPE: "norm"
+    CLIP_VALUE: 1.0
+    NORM_TYPE: 2.0
   AMP:
     ENABLED: True          # VRAM headroom on Pascal; GCN block forces fp32 internally
 
