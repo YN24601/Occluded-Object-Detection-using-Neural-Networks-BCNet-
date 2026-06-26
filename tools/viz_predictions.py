@@ -38,6 +38,7 @@ sys.path.insert(0, str(ROOT))
 
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.data import DatasetCatalog, MetadataCatalog
+from detectron2.data import transforms as T
 from detectron2.modeling import build_model
 
 import bcnet  # noqa: F401  (registers BCNetBilayerMaskHead)
@@ -91,6 +92,13 @@ def main() -> None:
     model.eval()
     device = next(model.parameters()).device
 
+    # Match COCOEvaluator/DefaultPredictor test-time preprocessing: resize the
+    # short edge to MIN_SIZE_TEST (capped at MAX_SIZE_TEST) so the model runs at
+    # its trained scale. Feeding native-resolution images degrades predictions.
+    aug = T.ResizeShortestEdge(
+        [cfg.INPUT.MIN_SIZE_TEST, cfg.INPUT.MIN_SIZE_TEST], cfg.INPUT.MAX_SIZE_TEST
+    )
+
     args.out_dir.mkdir(parents=True, exist_ok=True)
     dataset_dicts = DatasetCatalog.get(cfg.BCNET.VAL_DATASET_NAME)
 
@@ -102,8 +110,15 @@ def main() -> None:
         bgr = cv2.imread(d["file_name"])
         rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
         h, w = bgr.shape[:2]
-        # GeneralizedRCNN expects a BGR/RGB image tensor (CHW) per cfg.INPUT.FORMAT.
-        img_t = torch.as_tensor(bgr.transpose(2, 0, 1)).to(device)
+        # Feed the model an image in its configured colour order (cfg.INPUT.FORMAT,
+        # "BGR" by default), resized to the test scale. height/width stay at the
+        # ORIGINAL size so detector_postprocess rescales masks/boxes back onto the
+        # full-resolution `rgb` canvases used for the overlays below.
+        model_img = rgb if cfg.INPUT.FORMAT == "RGB" else bgr
+        model_img = aug.get_transform(model_img).apply_image(model_img)
+        img_t = torch.as_tensor(
+            np.ascontiguousarray(model_img.transpose(2, 0, 1)).astype("float32")
+        ).to(device)
         inputs = [{"image": img_t, "height": h, "width": w}]
 
         with torch.no_grad():

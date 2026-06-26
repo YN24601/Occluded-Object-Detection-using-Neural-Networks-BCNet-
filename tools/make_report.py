@@ -61,7 +61,9 @@ def _final_ap_table(metrics_path: Path) -> dict[str, float]:
     return latest
 
 
-def _write_summary(run_dir: Path, config_file: str, ap: dict[str, float]) -> Path:
+def _write_summary(
+    run_dir: Path, config_file: str, ap: dict[str, float], viz_ok: bool | None
+) -> Path:
     report_dir = run_dir / "report"
     report_dir.mkdir(parents=True, exist_ok=True)
     out = report_dir / "summary.md"
@@ -85,13 +87,19 @@ def _write_summary(run_dir: Path, config_file: str, ap: dict[str, float]) -> Pat
         ]
     else:
         lines.append("_No AP found in metrics.json (was the model evaluated?)._")
+    if viz_ok is None:
+        viz_line = "- `viz/` -- skipped (--no-viz)"
+    elif viz_ok:
+        viz_line = "- `viz/` -- random test-case prediction overlays"
+    else:
+        viz_line = "- `viz/` -- **FAILED** (see log; is `opencv-python` installed?)"
     lines += [
         "",
         "## Artifacts",
         "",
         "- `loss_curves.png` -- per-step training losses",
         "- `ap_curves.png` -- eval AP vs iteration",
-        "- `viz/` -- random test-case prediction overlays",
+        viz_line,
         "",
     ]
     out.write_text("\n".join(lines), encoding="utf-8")
@@ -137,13 +145,18 @@ def main() -> None:
         print("NOTE: no AP curve (no eval records in metrics.json).")
 
     # 4. Random test-case prediction overlays (baseline-safe).
+    viz_ok: bool | None = None
     if not args.no_viz:
-        _run([py, "tools/viz_predictions.py", "--config-file", args.config_file,
-              "--weights", weights, "--out-dir", str(run_dir / "viz"),
-              "--n", str(args.n_viz)])
+        rc = _run([py, "tools/viz_predictions.py", "--config-file", args.config_file,
+                   "--weights", weights, "--out-dir", str(run_dir / "viz"),
+                   "--n", str(args.n_viz)])
+        viz_ok = rc == 0
+        if not viz_ok:
+            print("WARNING: viz step returned non-zero -- no prediction overlays. "
+                  "Is `opencv-python` installed in this env? (`python -c \"import cv2\"`)")
 
     # 5. Markdown summary with the final AP table.
-    summary = _write_summary(run_dir, args.config_file, _final_ap_table(metrics))
+    summary = _write_summary(run_dir, args.config_file, _final_ap_table(metrics), viz_ok)
     print(f"\nWrote {summary}")
 
 

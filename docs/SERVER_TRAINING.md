@@ -131,7 +131,6 @@ Verify CUDA sees the GPU:
 ```bash
 CUDA_VISIBLE_DEVICES=2 python -c "import torch; print(torch.__version__, torch.cuda.get_device_name(0))"
 # -> 2.6.0+cu124 NVIDIA GeForce GTX 1080 Ti
-```
 
 Log in to W&B once (or `export WANDB_API_KEY=...`):
 
@@ -264,6 +263,17 @@ If it reaches iter 100 and stays under 11 GB, you are clear to train for real.
 > the CLI as trailing `KEY VALUE` pairs, or edit `configs/server_base.yaml`.
 
 ---
+> **Pre-flight checklist (done).**
+> - [x] Reviewed both smoke runs. The BCNet head fits in ~2.5 GB (≪ 11 GB),
+>   loads the full JSONs, all occluder/occludee/boundary losses are finite and
+>   decreasing, and eval produces predictions. The earlier `FloatingPointError`
+>   (at `BASE_LR 0.005`) is fixed by `0.0025` + gradient clipping in
+>   `server_base.yaml`. **Cleared to train.**
+> - [x] Confirmed metrics + viz are produced: `metrics.json` (losses + AP every
+>   `EVAL_PERIOD`), TensorBoard events, W&B, and the post-hoc Section 8 reports
+>   (`loss_curves.png`, `ap_curves.png`, `viz/pred_*.png`, `summary.md`,
+>   `compare.md`, `compare_ap.png`). **Caveat:** `viz/pred_*.png` needs
+>   `opencv-python` — verify `import cv2` before `make_report.py`.
 
 ## 7. Full training
 
